@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Tajawal:wght@300;400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Tajawal:wght@300;400;500;700;800&display=swap');
     
     /* --- Design System & Theming --- */
     :root {
@@ -40,6 +40,7 @@
       --danger: #ef4444;
       --success: #10b981;
       --warning: #f59e0b;
+      --info: #3b82f6;
       
       /* Typography & Animation */
       --font-primary: 'Tajawal', 'Almarai', sans-serif;
@@ -86,13 +87,17 @@
       flex-direction: column;
       overflow-x: hidden;
       transition: background-color 0.5s ease, color 0.5s ease;
+      line-height: 1.6;
     }
 
-    /* RTL/LTR Specifics */
+    /* RTL/LTR Alignment Corrections */
     html[dir="ltr"] body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    html[dir="ltr"] .form-label { right: auto; left: 16px; }
-    html[dir="ltr"] .form-control:focus ~ .form-label,
-    html[dir="ltr"] .form-control:not(:placeholder-shown) ~ .form-label { right: auto; left: 12px; }
+    html[dir="ltr"] .form-label, html[dir="ltr"] .stepper-label { right: auto; left: 16px; transform-origin: left top; }
+    html[dir="rtl"] .form-label, html[dir="rtl"] .stepper-label { left: auto; right: 16px; transform-origin: right top; }
+    
+    html[dir="ltr"] .form-control:focus ~ .form-label, html[dir="ltr"] .form-control:not(:placeholder-shown) ~ .form-label { right: auto; left: 12px; }
+    html[dir="rtl"] .form-control:focus ~ .form-label, html[dir="rtl"] .form-control:not(:placeholder-shown) ~ .form-label { left: auto; right: 12px; }
+    
     html[dir="ltr"] .nav-logo { flex-direction: row; }
     html[dir="ltr"] th, html[dir="ltr"] td { text-align: left; }
     html[dir="rtl"] th, html[dir="rtl"] td { text-align: right; }
@@ -131,7 +136,7 @@
       transform: translateY(0); animation: floatUp 0.8s ease-out forwards;
     }
     @keyframes floatUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-    .login-logo { font-family: var(--font-heading); font-size: 2.2rem; margin-bottom: 30px; color: var(--gold-premium); font-weight: 800; letter-spacing: -1px;}
+    .login-logo { font-family: var(--font-heading); font-size: 2.4rem; margin-bottom: 30px; color: var(--gold-premium); font-weight: 800; letter-spacing: -1px;}
     .custom-logo-text i { background: linear-gradient(135deg, var(--gold-premium), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     
     /* --- Modern Navigation --- */
@@ -151,13 +156,13 @@
     .nav-actions { display: flex; gap: 15px; align-items: center; }
     
     .nav-link {
-      text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 1.05rem;
+      text-decoration: none; color: var(--text-muted); font-weight: 700; font-size: 1.05rem;
       padding: 10px 18px; border-radius: 12px; transition: all var(--transition-fast);
       cursor: pointer; border: 1px solid transparent; background: transparent;
       display: flex; align-items: center; gap: 8px; position: relative; overflow: hidden;
     }
     .nav-link:hover { color: var(--text-main); background: var(--glass-highlight); }
-    .nav-link.active { color: var(--gold-premium); background: var(--glass-highlight); border-color: var(--glass-border); font-weight: 700;}
+    .nav-link.active { color: var(--gold-premium); background: var(--glass-highlight); border-color: var(--glass-border); font-weight: 800;}
     /* Ripple Effect */
     .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; background-color: rgba(255, 255, 255, 0.3); }
     @keyframes ripple { to { transform: scale(4); opacity: 0; } }
@@ -173,8 +178,8 @@
     .smart-greeting {
       text-align: center; margin-bottom: 30px; margin-top: 35px; animation: slideUp 0.6s ease forwards;
     }
-    .smart-greeting h1 { font-family: var(--font-heading); font-size: 2.2rem; color: var(--text-main); margin-bottom: 5px; }
-    .smart-greeting p { color: var(--text-muted); font-size: 1.1rem; }
+    .smart-greeting h1 { font-family: var(--font-heading); font-size: 2.2rem; color: var(--text-main); margin-bottom: 5px; font-weight: 800;}
+    .smart-greeting p { color: var(--text-muted); font-size: 1.1rem; font-weight: 500;}
 
     /* --- Main App Layout --- */
     #appContainer { display: none; }
@@ -195,28 +200,50 @@
     /* Forms */
     .form-container { padding: 40px; max-width: 600px; margin: 0 auto; }
     .form-header { text-align: center; margin-bottom: 35px; }
-    .form-header h2 { font-family: var(--font-heading); color: var(--text-main); font-size: 1.8rem; margin-bottom: 10px; }
-    .form-header p { color: var(--text-muted); font-size: 0.95rem; }
+    .form-header h2 { font-family: var(--font-heading); color: var(--text-main); font-size: 1.8rem; margin-bottom: 10px; font-weight: 800;}
+    .form-header p { color: var(--text-muted); font-size: 1rem; font-weight: 500;}
 
-    .form-group { position: relative; margin-bottom: 25px; }
+    .form-group { position: relative; margin-bottom: 28px; }
     .form-control {
       width: 100%; padding: 18px 16px 14px; background: var(--input-bg);
       border: 1px solid var(--glass-border); border-radius: 14px; 
-      font-family: inherit; font-size: 1.1rem; color: var(--text-main); transition: var(--transition-fast);
+      font-family: inherit; font-size: 1.15rem; color: var(--text-main); transition: var(--transition-fast); font-weight: 600;
     }
     
     /* Date Icon Invert in Dark Mode */
     html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: invert(1);
-      opacity: 0.7;
-      cursor: pointer;
+      filter: invert(1); opacity: 0.7; cursor: pointer;
     }
 
     .form-control:focus { outline: none; border-color: var(--gold-premium); background: var(--bg-base); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1); }
     .form-control::placeholder { color: transparent; }
-    .form-label { position: absolute; top: 18px; color: var(--text-muted); transition: var(--transition-fast); pointer-events: none; font-size: 1rem; font-weight: 500;}
+    .form-label { position: absolute; top: 18px; color: var(--text-muted); transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); pointer-events: none; font-size: 1.05rem; font-weight: 600;}
     .form-control:focus ~ .form-label, .form-control:not(:placeholder-shown) ~ .form-label {
-      transform: translateY(-28px) scale(0.85); color: var(--gold-premium); background: var(--bg-surface); padding: 0 8px; border-radius: 4px; border: 1px solid var(--glass-border);
+      transform: translateY(-30px) scale(0.85); color: var(--gold-premium); background: var(--bg-surface); padding: 0 10px; border-radius: 6px; border: 1px solid var(--glass-border); font-weight: 700;
+    }
+
+    /* --- NEW: Horizontal Stepper with Floating Labels --- */
+    .stepper-wrapper {
+      display: flex; align-items: center; position: relative;
+      background: var(--input-bg); border: 1px solid var(--glass-border); border-radius: 14px; transition: var(--transition-fast);
+    }
+    .stepper-wrapper:focus-within {
+      border-color: var(--gold-premium); background: var(--bg-base); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+    }
+    .stepper-btn {
+      background: transparent; border: none; color: var(--gold-premium); font-size: 1.4rem; font-weight: bold;
+      padding: 15px 25px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
+    }
+    .stepper-btn:hover { background: rgba(212, 175, 55, 0.1); }
+    .stepper-btn:active { transform: scale(0.9); }
+    .stepper-input {
+      flex: 1; border: none; background: transparent; text-align: center; font-size: 1.3rem; font-weight: 800;
+      color: var(--text-main); outline: none; padding: 18px 10px 14px; font-family: inherit; -moz-appearance: textfield;
+    }
+    .stepper-input::-webkit-outer-spin-button, .stepper-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .stepper-label {
+      position: absolute; top: -14px; right: 20px; background: var(--bg-surface); padding: 2px 10px;
+      font-size: 0.9rem; font-weight: 700; border-radius: 6px; border: 1px solid var(--glass-border); z-index: 2; transition: 0.3s;
     }
 
     /* Live Preview Box */
@@ -226,12 +253,12 @@
       text-align: center; margin-bottom: 25px; display: flex; flex-direction: column; gap: 5px;
       transition: all var(--transition-fast);
     }
-    .live-preview-box span { color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;}
-    .live-preview-box h3 { color: var(--gold-premium); font-size: 2rem; font-family: var(--font-heading); margin: 0; }
+    .live-preview-box span { color: var(--text-muted); font-size: 0.95rem; font-weight: 700; text-transform: uppercase;}
+    .live-preview-box h3 { color: var(--gold-premium); font-size: 2.2rem; font-family: var(--font-heading); margin: 0; font-weight: 800;}
 
     .btn-submit {
       width: 100%; padding: 18px; background: linear-gradient(135deg, var(--gold-premium), #b8860b); color: #000;
-      border: none; border-radius: 14px; font-size: 1.2rem; font-weight: 800; cursor: pointer; transition: var(--transition-fast);
+      border: none; border-radius: 14px; font-size: 1.25rem; font-weight: 800; cursor: pointer; transition: var(--transition-fast);
       font-family: inherit; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
     }
     .btn-submit::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: 0.5s; }
@@ -251,14 +278,14 @@
     .stat-card:hover::before { opacity: 1; }
     
     .stat-icon { font-size: 2.5rem; margin-bottom: 15px; }
-    .stat-title { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;}
+    .stat-title { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;}
     .stat-value { font-size: 2.2rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading); letter-spacing: 1px;}
-    .stat-currency { font-size: 1rem; color: var(--text-muted); font-weight: 400; margin-inline-start: 5px; }
+    .stat-currency { font-size: 1rem; color: var(--text-muted); font-weight: 600; margin-inline-start: 5px; }
 
     /* Charts */
     .charts-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 30px; }
     .chart-wrapper { padding: 25px; height: 480px; position: relative; }
-    .chart-title { font-family: var(--font-heading); color: var(--text-main); font-size: 1.3rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-weight: 700;}
+    .chart-title { font-family: var(--font-heading); color: var(--text-main); font-size: 1.4rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-weight: 800;}
     .chart-title i { color: var(--gold-premium); }
     
     /* Loading Skeletons */
@@ -269,7 +296,7 @@
     .market-tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
     .market-tab { 
       padding: 10px 20px; background: var(--bg-surface); border: 1px solid var(--glass-border); 
-      border-radius: 12px; color: var(--text-muted); cursor: pointer; font-weight: 600; white-space: nowrap; transition: var(--transition-fast);
+      border-radius: 12px; color: var(--text-muted); cursor: pointer; font-weight: 700; white-space: nowrap; transition: var(--transition-fast); font-family: inherit; font-size: 1.05rem;
     }
     .market-tab:hover { background: var(--glass-highlight); color: var(--text-main); }
     .market-tab.active { background: linear-gradient(135deg, var(--gold-premium), #b8860b); color: #000; border-color: transparent; }
@@ -280,20 +307,20 @@
       display: flex; gap: 15px; flex-wrap: wrap; background: var(--glass-highlight); padding: 20px; border-radius: 16px; margin-bottom: 25px; align-items: flex-end; border: 1px solid var(--glass-border);
     }
     .filter-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
-    .filter-group label { color: var(--text-muted); font-size: 0.9rem; font-weight: 600; }
-    .filter-group input { padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--bg-base); color: var(--text-main); font-family: inherit; }
-    .filter-btn { padding: 12px 24px; background: var(--primary-teal); color: #fff; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; gap: 8px; align-items: center; justify-content: center;}
+    .filter-group label { color: var(--text-muted); font-size: 1rem; font-weight: 700; }
+    .filter-group input { padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--bg-base); color: var(--text-main); font-family: inherit; font-weight: 600; font-size: 1.05rem;}
+    .filter-btn { padding: 12px 24px; background: var(--primary-teal); color: #fff; border: none; border-radius: 10px; font-weight: 800; font-size: 1.05rem; cursor: pointer; transition: 0.3s; display: flex; gap: 8px; align-items: center; justify-content: center; font-family: inherit;}
     .filter-btn:hover { background: var(--deep-teal); }
     .filter-btn-reset { background: transparent; border: 1px solid var(--glass-border); color: var(--text-main); }
     .filter-btn-reset:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
 
     .table-container { padding: 30px; overflow-x: auto; }
     .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;}
-    .header-actions h2 { font-family: var(--font-heading); color: var(--text-main); font-size: 1.6rem; margin:0;}
+    .header-actions h2 { font-family: var(--font-heading); color: var(--text-main); font-size: 1.7rem; margin:0; font-weight: 800;}
     .action-group { display: flex; gap: 10px; }
     .btn-action {
       background: var(--bg-base); color: var(--text-main); padding: 12px 20px; border: 1px solid var(--glass-border); 
-      border-radius: 12px; cursor: pointer; font-family: inherit; transition: var(--transition-fast); display: flex; gap: 8px; align-items: center; font-weight: 700;
+      border-radius: 12px; cursor: pointer; font-family: inherit; transition: var(--transition-fast); display: flex; gap: 8px; align-items: center; font-weight: 700; font-size: 1.05rem;
     }
     .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     .btn-action.btn-export { background: linear-gradient(135deg, var(--primary-teal), var(--deep-teal)); border: none; color: #fff;}
@@ -301,49 +328,67 @@
     .btn-action.btn-clear:hover { background: rgba(239, 68, 68, 0.2); }
     
     table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 900px; }
-    th { padding: 18px 15px; color: var(--text-muted); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; border-bottom: 2px solid var(--glass-border); background: var(--glass-highlight); }
-    td { padding: 18px 15px; background: var(--bg-surface); color: var(--text-main); font-weight: 500; transition: var(--transition-fast); border-top: 1px solid transparent; border-bottom: 1px solid transparent; }
+    th { padding: 18px 15px; color: var(--text-muted); font-weight: 800; font-size: 1rem; text-transform: uppercase; border-bottom: 2px solid var(--glass-border); background: var(--glass-highlight); }
+    td { padding: 18px 15px; background: var(--bg-surface); color: var(--text-main); font-weight: 600; font-size: 1.05rem; transition: var(--transition-fast); border-top: 1px solid transparent; border-bottom: 1px solid transparent; }
     tr:hover td { background: var(--glass-highlight); border-color: var(--glass-border); }
     html[dir="rtl"] tr:hover td:first-child { border-right: 1px solid var(--glass-border); }
     html[dir="rtl"] tr:hover td:last-child { border-left: 1px solid var(--glass-border); }
     html[dir="ltr"] tr:hover td:first-child { border-left: 1px solid var(--glass-border); }
     html[dir="ltr"] tr:hover td:last-child { border-right: 1px solid var(--glass-border); }
     
-    .net-profit-cell { font-weight: 800; color: var(--gold-premium); font-size: 1.15rem; }
-    .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; display: inline-block; letter-spacing: 0.5px;}
+    .net-profit-cell { font-weight: 800; color: var(--gold-premium); font-size: 1.2rem; }
+    .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 800; display: inline-block; letter-spacing: 0.5px;}
 
     /* Row Actions (Edit/Delete) */
     .row-actions { display: flex; gap: 8px; justify-content: center; }
     .btn-icon-small { 
-      background: transparent; border: none; padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; color: var(--text-muted); font-size: 1rem;
+      background: transparent; border: none; padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; color: var(--text-muted); font-size: 1.1rem;
     }
     .btn-icon-small.edit:hover { background: rgba(212, 175, 55, 0.1); color: var(--gold-premium); }
     .btn-icon-small.delete:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
 
-    /* Admin Settings List */
-    .user-list { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;}
-    .user-card { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--glass-highlight); border: 1px solid var(--glass-border); border-radius: 16px; transition: 0.3s; }
+    /* --- NEW Admin Settings Grid Redesign --- */
+    .admin-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+    @media(min-width: 1024px) { .admin-grid { grid-template-columns: 1fr 1fr; } }
+    
+    .admin-section { padding: 30px; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .admin-section-title { font-family: var(--font-heading); color: var(--text-main); font-size: 1.6rem; margin-bottom: 25px; font-weight: 800; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px;}
+    .admin-section-title i { color: var(--gold-premium); }
+
+    .user-list { display: flex; flex-direction: column; gap: 15px;}
+    .user-card { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--glass-highlight); border: 1px solid var(--glass-border); border-radius: 16px; transition: 0.3s; flex-wrap: wrap; gap: 15px;}
     .user-card:hover { transform: translateY(-3px); border-color: var(--gold-glow-dark); }
     .user-info { display: flex; align-items: center; gap: 15px; }
     .color-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--bg-surface); }
+    
+    .capital-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-inline-end: 10px;}
+    .capital-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(0,0,0,0.1); border-radius: 12px; border: 1px solid var(--glass-border); font-size: 0.95rem; font-weight: 600;}
+    .capital-item.increase { border-right: 4px solid var(--success); }
+    .capital-item.decrease { border-right: 4px solid var(--danger); }
+    html[dir="ltr"] .capital-item.increase { border-right: none; border-left: 4px solid var(--success); }
+    html[dir="ltr"] .capital-item.decrease { border-right: none; border-left: 4px solid var(--danger); }
+    .capital-date { color: var(--text-muted); font-size: 0.85rem;}
+    .capital-amount { font-weight: 800; font-size: 1.1rem; }
+    .capital-amount.up { color: var(--success); }
+    .capital-amount.down { color: var(--danger); }
 
     /* --- Smart Toasts (with Progress) --- */
     .toast-container { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column-reverse; gap: 10px; pointer-events: none;}
     .toast {
       background: var(--bg-surface); border: 1px solid var(--glass-border); color: var(--text-main); padding: 16px 24px;
-      border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 8px; font-weight: 600;
+      border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 8px; font-weight: 700; font-size: 1.05rem;
       opacity: 0; transform: translateY(30px) scale(0.9); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); min-width: 300px; overflow: hidden; position: relative;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); min-width: 320px; overflow: hidden; position: relative;
     }
     .toast.show { opacity: 1; transform: translateY(0) scale(1); }
     .toast-content { display: flex; align-items: center; gap: 12px; }
-    .toast i { font-size: 1.3rem; }
-    .toast.success { border-left: 4px solid var(--success); }
+    .toast i { font-size: 1.4rem; }
+    .toast.success { border-left: 5px solid var(--success); }
     .toast.success i { color: var(--success); }
-    .toast.error { border-left: 4px solid var(--danger); }
+    .toast.error { border-left: 5px solid var(--danger); }
     .toast.error i { color: var(--danger); }
-    html[dir="rtl"] .toast.success { border-left: none; border-right: 4px solid var(--success); }
-    html[dir="rtl"] .toast.error { border-left: none; border-right: 4px solid var(--danger); }
+    html[dir="rtl"] .toast.success { border-left: none; border-right: 5px solid var(--success); }
+    html[dir="rtl"] .toast.error { border-left: none; border-right: 5px solid var(--danger); }
     
     .toast-progress { position: absolute; bottom: 0; left: 0; height: 3px; background: rgba(255,255,255,0.2); width: 100%; }
     .toast-progress-bar { height: 100%; background: var(--text-main); width: 100%; animation: progress shrink linear forwards; }
@@ -362,9 +407,9 @@
         padding: 10px 5px calc(10px + env(safe-area-inset-bottom));
         justify-content: space-around; z-index: 1000; box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
       }
-      .nav-link { flex-direction: column; font-size: 0.75rem; padding: 10px 4px; gap: 6px; border-radius: 14px; width: 22%; text-align: center; font-weight: 500;}
+      .nav-link { flex-direction: column; font-size: 0.75rem; padding: 10px 4px; gap: 6px; border-radius: 14px; width: 22%; text-align: center; font-weight: 600;}
       .nav-link i { font-size: 1.3rem; margin: 0; }
-      .nav-link span.tab-text { display: block; white-space: nowrap; font-size: 0.7rem;}
+      .nav-link span.tab-text { display: block; white-space: nowrap; font-size: 0.75rem;}
       .nav-link.active { transform: translateY(-5px); box-shadow: 0 5px 15px var(--gold-glow-dark); }
       
       .main-content { margin-top: 100px; margin-bottom: 100px; padding: 0 15px; }
@@ -375,7 +420,7 @@
       .header-actions { flex-direction: column; gap: 15px; align-items: stretch;}
       .action-group { display: flex; flex-direction: column; gap: 10px; width: 100%;}
       .btn-action { justify-content: center; width: 100%;}
-      .form-container, .table-container { padding: 25px 15px; }
+      .form-container, .table-container, .admin-section { padding: 25px 15px; }
       .tradingview-widget-wrapper { height: 500px; }
       
       .nav-actions span { display: none; } /* Hide user info top bar */
@@ -390,12 +435,12 @@
         padding: 15px; background: var(--glass-highlight); position: relative;
         box-shadow: 0 5px 15px rgba(0,0,0,0.05);
       }
-      td { position: relative; padding: 12px 15px; padding-inline-start: 50%; text-align: end; border: none; font-size: 0.95rem; border-bottom: 1px solid var(--glass-border); }
+      td { position: relative; padding: 12px 15px; padding-inline-start: 50%; text-align: end; border: none; font-size: 1.05rem; font-weight: 700; border-bottom: 1px solid var(--glass-border); }
       td:last-child { border-bottom: none; }
       html[dir="rtl"] td { padding-inline-start: 50%; text-align: left; }
       td::before { 
         content: attr(data-label); position: absolute; top: 12px; inset-inline-start: 15px; width: 45%; 
-        white-space: nowrap; font-weight: 700; color: var(--text-muted); text-align: start; 
+        white-space: nowrap; font-weight: 800; color: var(--text-muted); text-align: start; 
       }
       .row-actions { justify-content: flex-end; padding-top: 10px; }
     }
@@ -411,7 +456,7 @@
         <img class="custom-logo-img" style="display:none; max-height: 80px; margin: 0 auto 20px; border-radius: 12px;">
         <div class="custom-logo-text"><i class="fa-solid fa-gem"></i> IronPeak <span class="brand-gold">Capital</span></div>
       </div>
-      <h3 id="loginTitleText" style="margin-bottom: 25px; color: var(--text-muted); font-weight: 500;">تسجيل الدخول للنظام</h3>
+      <h3 id="loginTitleText" style="margin-bottom: 25px; color: var(--text-muted); font-weight: 700;">تسجيل الدخول للنظام</h3>
       <form id="loginForm">
         <div class="form-group">
           <input type="text" id="loginUser" class="form-control" required placeholder=" " autocomplete="username">
@@ -438,7 +483,7 @@
         </div>
         
         <div class="nav-actions">
-          <span id="currentUserDisplay" style="color: var(--text-muted); font-weight: 600; margin-inline-end: 10px;"></span>
+          <span id="currentUserDisplay" style="color: var(--text-muted); font-weight: 700; margin-inline-end: 10px; font-size: 1.05rem;"></span>
           <button class="icon-btn" onclick="toggleTheme()" title="تغيير المظهر" id="themeBtn">
             <i class="fa-regular fa-moon"></i>
           </button>
@@ -464,7 +509,7 @@
           <i class="fa-solid fa-clock-rotate-left"></i> <span class="tab-text" data-i18n="navHistory">السجل المالي</span>
         </button>
         <button class="nav-link" onclick="switchTab('admin')" id="navAdmin" style="display: none;">
-          <i class="fa-solid fa-user-gear"></i> <span class="tab-text" data-i18n="navAdmin">تعريفات</span>
+          <i class="fa-solid fa-user-gear"></i> <span class="tab-text" data-i18n="navAdmin">تعريفات النظام</span>
         </button>
       </div>
     </nav>
@@ -479,6 +524,7 @@
           <div class="skeleton" style="height: 180px;"></div>
           <div class="skeleton" style="height: 180px;"></div>
           <div class="skeleton" style="height: 180px;"></div>
+          <div class="skeleton" style="height: 180px;"></div>
         </div>
 
         <div class="charts-container">
@@ -489,7 +535,7 @@
             </div>
           </div>
           <div class="premium-card chart-wrapper">
-            <div class="chart-title"><i class="fa-solid fa-chart-area"></i> <span data-i18n="chartDaily">نمو رأس المال وصافي الربح</span></div>
+            <div class="chart-title"><i class="fa-solid fa-chart-area"></i> <span data-i18n="chartDaily">نمو الأرباح وصافي الربح اليومي</span></div>
             <div style="position: relative; height: 85%; width: 100%;">
               <canvas id="dailyCumulativeChart"></canvas>
             </div>
@@ -501,7 +547,7 @@
         <div class="premium-card form-container">
           <div class="form-header">
             <h2 id="formMainTitle" data-i18n="inputTitle">إدخال أرباح جديدة</h2>
-            <p id="formSubTitle" data-i18n="inputDesc">أدخل صافي أرباح الشركاء لهذا اليوم بدقة</p>
+            <p id="formSubTitle" data-i18n="inputDesc">أدخل صافي أرباح اليوم ليتم توزيعها أو إدخالها للشركاء بدقة</p>
           </div>
           <form id="entryForm">
             <input type="hidden" id="editEntryId" value="">
@@ -510,18 +556,26 @@
               <input type="date" id="date" class="form-control" required placeholder=" ">
               <label for="date" class="form-label" data-i18n="date">التاريخ</label>
             </div>
+
+            <div class="form-group" style="margin-bottom: 40px; padding-bottom: 25px; border-bottom: 1px dashed var(--glass-border);">
+              <label style="color:var(--text-main); font-size: 1.1rem; font-weight:800; margin-bottom: 10px; display:block;" data-i18n="autoDistribute">توزيع تلقائي (أدخل إجمالي الربح)</label>
+              <div class="stepper-wrapper">
+                 <input type="number" id="masterNetProfit" class="stepper-input" step="1" placeholder="0.00">
+              </div>
+              <small style="color:var(--info); font-size: 0.9rem; font-weight: 600; margin-top: 8px; display:block;"><i class="fa-solid fa-wand-magic-sparkles"></i> عند إدخال رقم هنا، سيتم توزيعه تلقائياً بناءً على نسب الشركاء الحالية.</small>
+            </div>
             
             <div id="dynamicPartnerInputs"></div>
 
             <div class="live-preview-box" id="livePreviewBox">
-              <span data-i18n="liveTotal">إجمالي الربح الصافي المتوقع</span>
+              <span data-i18n="liveTotal">إجمالي الربح الصافي للعملية</span>
               <h3 id="liveTotalAmount">0.00 <small style="font-size:1rem" data-i18n="currency">JD</small></h3>
             </div>
 
             <button type="submit" class="btn-submit" id="saveDataBtn">
-              <i class="fa-solid fa-check-double"></i> <span data-i18n="saveBtn">اعتماد البيانات</span>
+              <i class="fa-solid fa-check-double"></i> <span data-i18n="saveBtn">اعتماد وحفظ البيانات</span>
             </button>
-            <button type="button" class="btn-action btn-clear" id="cancelEditBtn" style="display:none; width: 100%; justify-content: center; margin-top: 10px;" onclick="cancelEditing()">
+            <button type="button" class="btn-action btn-clear" id="cancelEditBtn" style="display:none; width: 100%; justify-content: center; margin-top: 15px;" onclick="cancelEditing()">
               <i class="fa-solid fa-times"></i> <span data-i18n="cancelEdit">إلغاء التعديل</span>
             </button>
           </form>
@@ -576,40 +630,89 @@
       </section>
 
       <section id="admin" class="tab-content">
-        <div class="premium-card form-container" style="max-width: 900px;">
-          <div class="form-header">
-            <h2 data-i18n="adminTitle">إدارة الشركاء والنظام</h2>
-            <p data-i18n="adminDesc">إضافة شركاء جدد وصلاحيات الدخول للأدوار المختلفة</p>
-          </div>
+        <div class="admin-grid">
           
-          <form id="addPartnerForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-            <div class="form-group" style="margin-bottom:0;">
-              <input type="text" id="p_username" class="form-control" required placeholder=" ">
-              <label for="p_username" class="form-label" data-i18n="pUsername">اسم المستخدم (Login)</label>
-            </div>
-            <div class="form-group" style="margin-bottom:0;">
-              <input type="text" id="p_password" class="form-control" required placeholder=" ">
-              <label for="p_password" class="form-label" data-i18n="pPassword">كلمة المرور</label>
-            </div>
-            <div class="form-group" style="margin-bottom:0;">
-              <input type="text" id="p_nameAr" class="form-control" required placeholder=" ">
-              <label for="p_nameAr" class="form-label" data-i18n="pNameAr">الاسم (عربي)</label>
-            </div>
-            <div class="form-group" style="margin-bottom:0;">
-              <input type="text" id="p_nameEn" class="form-control" required placeholder=" ">
-              <label for="p_nameEn" class="form-label" data-i18n="pNameEn">الاسم (انجليزي)</label>
-            </div>
-            <div class="form-group" style="grid-column: 1 / -1;">
-              <label style="color:var(--text-muted); font-size: 0.95rem; font-weight:600; margin-bottom: 10px; display:block;" data-i18n="pColor">اللون التعريفي (Chart Color)</label>
-              <input type="color" id="p_color" value="#00A693" style="width: 100%; height: 60px; border:2px solid var(--glass-border); border-radius: 12px; cursor:pointer; background: transparent; padding: 5px;">
-            </div>
-            <button type="submit" class="btn-submit" style="grid-column: 1 / -1;"><i class="fa-solid fa-user-plus"></i> <span data-i18n="addPartnerBtn">حفظ وإضافة الشريك</span></button>
-          </form>
+          <div style="display: flex; flex-direction: column; gap: 30px;">
+            
+            <div class="admin-section">
+               <div class="admin-section-title"><i class="fa-solid fa-vault"></i> <span data-i18n="manageCapital">إدارة رأس المال</span></div>
+               
+               <form id="capitalForm" style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                 <div class="form-group" style="margin-bottom:0;">
+                   <input type="number" id="cap_amount" class="form-control" step="0.01" required placeholder=" ">
+                   <label for="cap_amount" class="form-label" data-i18n="capAmount">المبلغ</label>
+                 </div>
+                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                   <div class="form-group" style="margin-bottom:0;">
+                     <input type="date" id="cap_date" class="form-control" required placeholder=" ">
+                     <label for="cap_date" class="form-label" data-i18n="date">التاريخ</label>
+                   </div>
+                   <div class="form-group" style="margin-bottom:0;">
+                     <select id="cap_type" class="form-control" style="appearance: none; cursor:pointer;">
+                        <option value="increase" data-i18n="capIncrease">إيداع / زيادة</option>
+                        <option value="decrease" data-i18n="capDecrease">سحب / تخفيض</option>
+                     </select>
+                     <label for="cap_type" class="form-label" style="transform: translateY(-30px) scale(0.85); background: var(--bg-surface); padding: 0 10px; border-radius: 6px; border: 1px solid var(--glass-border); color: var(--gold-premium);" data-i18n="capType">نوع الحركة</label>
+                   </div>
+                 </div>
+                 <div class="form-group" style="margin-bottom:0;">
+                   <input type="text" id="cap_note" class="form-control" placeholder=" ">
+                   <label for="cap_note" class="form-label" data-i18n="capNote">ملاحظة (اختياري)</label>
+                 </div>
+                 <button type="submit" class="btn-submit"><i class="fa-solid fa-plus-minus"></i> <span data-i18n="saveCapBtn">حفظ الحركة</span></button>
+               </form>
 
-          <div style="margin-top: 50px; border-top: 1px solid var(--glass-border); padding-top: 30px;">
-            <h3 style="color:var(--text-main); margin-bottom:15px; font-family:var(--font-heading); font-size:1.4rem;" data-i18n="currentPartners">الشركاء الحاليين في النظام</h3>
-            <div id="adminPartnersList" class="user-list"></div>
+               <div style="margin-top: 25px;">
+                 <h4 style="color:var(--text-main); margin-bottom:10px; font-weight: 800;" data-i18n="capHistory">سجل رأس المال</h4>
+                 <div class="capital-list" id="capitalHistoryList"></div>
+               </div>
+            </div>
+
+            <div class="admin-section">
+              <div class="admin-section-title"><i class="fa-solid fa-user-plus"></i> <span data-i18n="addPartnerTitle">تعريف شريك جديد</span></div>
+              <form id="addPartnerForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <input type="text" id="p_username" class="form-control" required placeholder=" ">
+                  <label for="p_username" class="form-label" data-i18n="pUsername">اسم الدخول</label>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <input type="text" id="p_password" class="form-control" required placeholder=" ">
+                  <label for="p_password" class="form-label" data-i18n="pPassword">كلمة المرور</label>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <input type="text" id="p_nameAr" class="form-control" required placeholder=" ">
+                  <label for="p_nameAr" class="form-label" data-i18n="pNameAr">الاسم عربي</label>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <input type="text" id="p_nameEn" class="form-control" required placeholder=" ">
+                  <label for="p_nameEn" class="form-label" data-i18n="pNameEn">الاسم إنجليزي</label>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1; margin-bottom: 0;">
+                  <label style="color:var(--text-muted); font-size: 1rem; font-weight:700; margin-bottom: 10px; display:block;" data-i18n="pColor">اللون التعريفي</label>
+                  <input type="color" id="p_color" value="#00A693" style="width: 100%; height: 50px; border:2px solid var(--glass-border); border-radius: 12px; cursor:pointer; background: transparent; padding: 5px;">
+                </div>
+                <button type="submit" class="btn-submit" style="grid-column: 1 / -1;"><i class="fa-solid fa-save"></i> <span data-i18n="addPartnerBtn">حفظ الشريك</span></button>
+              </form>
+            </div>
+            
           </div>
+
+          <div class="admin-section" style="align-self: start;">
+            <div class="admin-section-title"><i class="fa-solid fa-percent"></i> <span data-i18n="distributePercentages">توزيع نسب الشركاء</span></div>
+            <p style="color:var(--text-muted); font-size:0.95rem; font-weight:600; margin-bottom: 25px;"><i class="fa-solid fa-circle-info" style="color:var(--info);"></i> يجب أن يكون مجموع النسب 100% بالضبط للحفظ. يتم تطبيق هذه النسب على الإدخالات الجديدة فقط.</p>
+            
+            <form id="percentagesForm">
+              <div id="adminPercentagesList" class="user-list"></div>
+              
+              <div style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 1.2rem; font-weight: 800; color: var(--text-main);" data-i18n="totalSum">المجموع الكلي:</span>
+                <span id="percTotalDisplay" style="font-size: 1.4rem; font-weight: 800; color: var(--danger);">0%</span>
+              </div>
+              
+              <button type="submit" id="savePercBtn" class="btn-submit" style="margin-top: 20px; background: linear-gradient(135deg, var(--success), #059669); color: #fff;" disabled><i class="fa-solid fa-check-to-slot"></i> <span data-i18n="savePercBtn">اعتماد النسب الجديدة</span></button>
+            </form>
+          </div>
+
         </div>
       </section>
 
@@ -626,11 +729,11 @@
     */
     const CUSTOM_LOGO_URL = ""; 
 
-
     /* --- State Management & Configuration --- */
+    // Default percentages required: Omar 66.666%, Rakan 33.334%
     const defaultPartners = {
-      omar: { id: 'omar', pass: '2026', role: 'partner', nameAr: 'عمر', nameEn: 'Omar', color: '#10b981' },
-      rakan: { id: 'rakan', pass: '2026', role: 'partner', nameAr: 'راكان', nameEn: 'Rakan', color: '#D4AF37' }
+      omar: { id: 'omar', pass: '2026', role: 'partner', nameAr: 'عمر', nameEn: 'Omar', color: '#10b981', percentage: 66.666 },
+      rakan: { id: 'rakan', pass: '2026', role: 'partner', nameAr: 'راكان', nameEn: 'Rakan', color: '#D4AF37', percentage: 33.334 }
     };
     const adminUser = { id: 'admin', pass: 'admin2026', role: 'admin', nameAr: 'مدير النظام', nameEn: 'System Admin' };
 
@@ -640,6 +743,11 @@
     let ironPeakData = JSON.parse(localStorage.getItem('ironPeakData')) || [];
     let currentUser = JSON.parse(sessionStorage.getItem('ironPeakUser')) || null;
     
+    // Capital Logic
+    // Default starting capital if array is empty
+    let initialCapital = [{ id: 'init', date: new Date().toISOString().split('T')[0], amount: 0, type: 'increase', note: 'رأس المال الافتتاحي' }];
+    let ironPeakCapital = JSON.parse(localStorage.getItem('ironPeakCapital')) || initialCapital;
+
     // Filtering State
     let filteredData = [...ironPeakData];
     
@@ -651,34 +759,38 @@
     const dict = {
       ar: {
         brand1: "IronPeak", brand2: "Capital", username: "اسم المستخدم", password: "كلمة المرور", loginBtn: "تسجيل دخول آمن",
-        navAnalytics: "لوحة القيادة", navInput: "إدخال/تعديل", navMarket: "الأسواق", navHistory: "السجل المالي", navAdmin: "تعريفات",
-        inputTitle: "إدخال أرباح جديدة", inputDesc: "أدخل صافي أرباح الشركاء لهذا اليوم بدقة", date: "تاريخ الحركة", saveBtn: "اعتماد وحفظ البيانات",
+        navAnalytics: "لوحة القيادة", navInput: "إدخال/تعديل", navMarket: "الأسواق", navHistory: "السجل المالي", navAdmin: "تعريفات النظام",
+        inputTitle: "إدخال أرباح جديدة", inputDesc: "أدخل صافي أرباح اليوم ليتم توزيعها أو إدخالها للشركاء بدقة", date: "التاريخ", saveBtn: "اعتماد وحفظ البيانات",
         updateBtn: "تحديث البيانات", cancelEdit: "إلغاء التعديل", editModeTitle: "تعديل حركة مالية", editModeDesc: "أنت تقوم الآن بتعديل بيانات مسجلة مسبقاً",
-        liveTotal: "إجمالي الربح الصافي المتوقع", chartMonthly: "الأداء الشهري للشركاء", chartDaily: "نمو رأس المال وصافي الربح", 
+        liveTotal: "إجمالي الربح الصافي للعملية", autoDistribute: "توزيع تلقائي (إجمالي الربح)", chartMonthly: "الأداء الشهري للشركاء", chartDaily: "نمو الأرباح وصافي الربح اليومي", 
         historyTitle: "السجل المالي التفصيلي", clearBtn: "مسح الكل", exportBtn: "تصدير Excel",
         filterFrom: "من تاريخ", filterTo: "إلى تاريخ", applyFilter: "تطبيق الفلتر", resetFilter: "إلغاء الفلتر",
-        adminTitle: "إدارة الشركاء والنظام", adminDesc: "إضافة شركاء جدد وصلاحيات الدخول", pUsername: "اسم المستخدم (للدخول)", pPassword: "كلمة المرور",
-        pNameAr: "الاسم (عربي)", pNameEn: "الاسم (انجليزي)", pColor: "اللون التعريفي (Chart Color)", addPartnerBtn: "حفظ وإضافة الشريك", currentPartners: "الشركاء الحاليين في النظام",
-        netProfit: "إجمالي الأرباح المتراكمة", days: "أيام التداول النشطة", dayUnit: "يوم", profitShare: "أرباح", thDate: "التاريخ", thMonth: "الشهر", thNet: "صافي الربح", thActions: "إجراءات",
-        errLogin: "بيانات الدخول غير صحيحة", succLogin: "تم تسجيل الدخول بنجاح", succSave: "تم حفظ الحركة المالية بنجاح", succUpdate: "تم التحديث بنجاح", succAdd: "تمت إضافة الشريك للنظام", 
-        succDel: "تم حذف الحركة المالية", confirmClear: "تحذير: هل أنت متأكد من مسح كافة السجلات؟ هذا الإجراء لا يمكن التراجع عنه.", confirmDel: "هل تريد بالتأكيد حذف هذه الحركة؟",
-        emptyData: "لا توجد حركات مالية مسجلة في هذا النطاق", currency: "JD", noExport: "لا توجد بيانات متاحة للتصدير",
+        adminTitle: "إدارة النظام", pUsername: "اسم المستخدم", pPassword: "كلمة المرور",
+        pNameAr: "الاسم (عربي)", pNameEn: "الاسم (إنجليزي)", pColor: "اللون التعريفي", addPartnerTitle: "تعريف شريك جديد", addPartnerBtn: "حفظ الشريك", 
+        distributePercentages: "توزيع نسب الشركاء", totalSum: "المجموع الكلي:", savePercBtn: "اعتماد النسب الجديدة",
+        manageCapital: "إدارة رأس المال", capAmount: "المبلغ", capType: "نوع الحركة", capIncrease: "إيداع / زيادة", capDecrease: "سحب / تخفيض", capNote: "ملاحظة (اختياري)", saveCapBtn: "حفظ الحركة", capHistory: "سجل حركات رأس المال", activeCapital: "رأس المال النشط",
+        netProfit: "إجمالي الأرباح المتراكمة", days: "أيام التداول النشطة", dayUnit: "يوم", profitShare: "حصة", thDate: "التاريخ", thMonth: "الشهر", thNet: "صافي الربح", thActions: "إجراءات",
+        errLogin: "بيانات الدخول غير صحيحة", succLogin: "تم تسجيل الدخول بنجاح", succSave: "تم حفظ العملية بنجاح", succUpdate: "تم التحديث بنجاح", succAdd: "تمت إضافة الشريك", 
+        succDel: "تم الحذف", succPerc: "تم اعتماد النسب الجديدة بنجاح", succCap: "تم حفظ حركة رأس المال", confirmClear: "تحذير: هل أنت متأكد من مسح كافة السجلات؟ هذا الإجراء لا يمكن التراجع عنه.", confirmDel: "هل تريد بالتأكيد حذف هذه الحركة؟",
+        emptyData: "لا توجد حركات مسجلة", currency: "JD", noExport: "لا توجد بيانات للتصدير",
         greetingMorning: "صباح الخير،", greetingAfternoon: "طاب مساؤك،", greetingEvening: "مساء الخير،", greetingSub: "إليك ملخص الأداء المالي حتى اللحظة."
       },
       en: {
         brand1: "IronPeak", brand2: "Capital", username: "Username", password: "Password", loginBtn: "Secure Sign In",
         navAnalytics: "Dashboard", navInput: "Entry/Edit", navMarket: "Markets", navHistory: "History", navAdmin: "Settings",
-        inputTitle: "New Profit Entry", inputDesc: "Enter daily net profit shares accurately", date: "Transaction Date", saveBtn: "Submit & Save",
+        inputTitle: "New Profit Entry", inputDesc: "Enter or auto-distribute daily net profits accurately", date: "Date", saveBtn: "Submit & Save",
         updateBtn: "Update Data", cancelEdit: "Cancel Edit", editModeTitle: "Edit Transaction", editModeDesc: "You are currently editing an existing record",
-        liveTotal: "Expected Total Net Profit", chartMonthly: "Monthly Partner Performance", chartDaily: "Capital Growth & Daily Net", 
+        liveTotal: "Transaction Net Profit", autoDistribute: "Auto Distribute (Total Profit)", chartMonthly: "Monthly Partner Performance", chartDaily: "Profit Growth & Daily Net", 
         historyTitle: "Detailed Financial History", clearBtn: "Clear All", exportBtn: "Export Excel",
         filterFrom: "From Date", filterTo: "To Date", applyFilter: "Apply Filter", resetFilter: "Reset",
-        adminTitle: "Partner & System Management", adminDesc: "Add new partners and set access roles", pUsername: "Login Username", pPassword: "Password",
-        pNameAr: "Name (Arabic)", pNameEn: "Name (English)", pColor: "Chart Color identifier", addPartnerBtn: "Save & Add Partner", currentPartners: "Active System Partners",
-        netProfit: "Total Cumulative Profit", days: "Active Trading Days", dayUnit: "Days", profitShare: "Profit", thDate: "Date", thMonth: "Month", thNet: "Net Profit", thActions: "Actions",
-        errLogin: "Invalid credentials. Try again.", succLogin: "Login successful", succSave: "Transaction saved successfully", succUpdate: "Updated successfully", succAdd: "Partner added to system", 
-        succDel: "Transaction deleted", confirmClear: "WARNING: Are you sure you want to clear ALL data? This cannot be undone.", confirmDel: "Are you sure you want to delete this record?",
-        emptyData: "No financial records found in this range", currency: "JD", noExport: "No data available to export",
+        adminTitle: "System Management", pUsername: "Username", pPassword: "Password",
+        pNameAr: "Name (Arabic)", pNameEn: "Name (English)", pColor: "Chart Color", addPartnerTitle: "Add New Partner", addPartnerBtn: "Save Partner", 
+        distributePercentages: "Distribute Percentages", totalSum: "Total Sum:", savePercBtn: "Save Percentages",
+        manageCapital: "Capital Management", capAmount: "Amount", capType: "Transaction Type", capIncrease: "Deposit / Increase", capDecrease: "Withdraw / Decrease", capNote: "Note (Optional)", saveCapBtn: "Save Transaction", capHistory: "Capital History", activeCapital: "Active Capital",
+        netProfit: "Total Cumulative Profit", days: "Active Trading Days", dayUnit: "Days", profitShare: "Share", thDate: "Date", thMonth: "Month", thNet: "Net Profit", thActions: "Actions",
+        errLogin: "Invalid credentials. Try again.", succLogin: "Login successful", succSave: "Transaction saved", succUpdate: "Updated successfully", succAdd: "Partner added", 
+        succDel: "Deleted", succPerc: "New percentages applied successfully", succCap: "Capital transaction saved", confirmClear: "WARNING: Are you sure you want to clear ALL data?", confirmDel: "Are you sure you want to delete this record?",
+        emptyData: "No records found", currency: "JD", noExport: "No data to export",
         greetingMorning: "Good Morning,", greetingAfternoon: "Good Afternoon,", greetingEvening: "Good Evening,", greetingSub: "Here is your financial performance summary."
       }
     };
@@ -706,7 +818,7 @@
         document.getElementById('loginScreen').style.display = 'flex';
       }
       document.getElementById('date').valueAsDate = new Date();
-      setupLivePreviewListeners();
+      document.getElementById('cap_date').valueAsDate = new Date();
     });
 
     /* --- Theme & UI Interactions --- */
@@ -715,7 +827,7 @@
       document.documentElement.setAttribute('data-theme', currentTheme);
       localStorage.setItem('ironPeakTheme', currentTheme);
       updateThemeIcon();
-      if(monthlyChartInstance) updateAnalytics(); // Re-render charts for grid colors
+      if(monthlyChartInstance) updateAnalytics(); 
     }
 
     function updateThemeIcon() {
@@ -723,7 +835,7 @@
       btn.innerHTML = currentTheme === 'dark' ? '<i class="fa-regular fa-sun"></i>' : '<i class="fa-regular fa-moon"></i>';
     }
 
-    /* Ripple Effect for Buttons */
+    /* Ripple Effect */
     document.querySelectorAll('.nav-link, .btn-submit, .btn-action').forEach(btn => {
       btn.addEventListener('click', function(e) {
         let x = e.clientX - e.target.getBoundingClientRect().left;
@@ -773,11 +885,9 @@
       document.getElementById('greetingArea').innerHTML = html;
     }
 
-    /* --- Smart Toasts (with Progress) --- */
-    let toastCount = 0;
+    /* --- Smart Toasts --- */
     function showToast(message, type = 'success') {
       const container = document.getElementById('toastContainer');
-      // Limit to 3 toasts max
       if(container.children.length >= 3) container.removeChild(container.firstChild);
 
       const toast = document.createElement('div');
@@ -790,17 +900,8 @@
       `;
       
       container.appendChild(toast);
-      
-      // Animate in
-      requestAnimationFrame(() => {
-        toast.classList.add('show');
-      });
-
-      // Auto remove
-      setTimeout(() => { 
-        toast.classList.remove('show'); 
-        setTimeout(() => toast.remove(), 400); 
-      }, 3500);
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3500);
     }
 
     /* --- Authentication --- */
@@ -842,8 +943,8 @@
         
         setSmartGreeting();
         renderDynamicUI();
-        filteredData = [...ironPeakData]; // Reset filter
-        switchTab('analytics'); // Smart Default Tab
+        filteredData = [...ironPeakData]; 
+        switchTab('analytics'); 
       }, 400);
     }
 
@@ -860,7 +961,7 @@
       if(navEl) navEl.classList.add('active');
 
       if (tabId === 'analytics') updateAnalytics();
-      if (tabId === 'transactions') { applyFilter(); } // Ensure table uses latest data/filter
+      if (tabId === 'transactions') { applyFilter(); }
       if (tabId === 'market' && !document.getElementById('tv_script')) loadMarket(currentMarketSymbol, document.querySelector('.market-tab.active'));
     }
 
@@ -868,23 +969,39 @@
     function renderDynamicUI() {
       renderEntryForm();
       renderTableHeaders();
-      if (currentUser.role === 'admin') renderAdminPartners();
+      if (currentUser.role === 'admin') {
+        renderAdminCapital();
+        renderAdminPercentages();
+      }
     }
 
+    /* Horizontal Stepper Builder */
     function renderEntryForm() {
       const container = document.getElementById('dynamicPartnerInputs');
       container.innerHTML = '';
       Object.values(ironPeakPartners).forEach(p => {
         const name = ironPeakLang === 'ar' ? p.nameAr : p.nameEn;
         const html = `
-          <div class="form-group">
-            <input type="number" id="profit_${p.id}" class="form-control profit-input" step="0.01" required placeholder=" ">
-            <label for="profit_${p.id}" class="form-label" style="color:${p.color}">${dict[ironPeakLang].profitShare} ${name}</label>
+          <div class="form-group" style="margin-bottom: 25px;">
+            <div class="stepper-wrapper">
+              <label class="stepper-label" style="color:${p.color}">${dict[ironPeakLang].profitShare} ${name} <span style="font-weight:400; font-size:0.8rem;">(${p.percentage}%)</span></label>
+              <button type="button" class="stepper-btn" onclick="stepValue('profit_${p.id}', -10)"><i class="fa-solid fa-minus"></i></button>
+              <input type="number" id="profit_${p.id}" class="stepper-input profit-input" step="0.01" value="" required placeholder="0.00">
+              <button type="button" class="stepper-btn" onclick="stepValue('profit_${p.id}', 10)"><i class="fa-solid fa-plus"></i></button>
+            </div>
           </div>
         `;
         container.innerHTML += html;
       });
-      setupLivePreviewListeners();
+      setupEntryListeners();
+    }
+
+    function stepValue(id, amount) {
+      const input = document.getElementById(id);
+      let val = parseFloat(input.value) || 0;
+      val += amount;
+      input.value = val.toFixed(2);
+      calculateLiveTotal();
     }
 
     function renderTableHeaders() {
@@ -899,11 +1016,24 @@
       tr.innerHTML = html;
     }
 
-    /* --- Live Total Preview Logic --- */
-    function setupLivePreviewListeners() {
-      const inputs = document.querySelectorAll('.profit-input');
-      inputs.forEach(inp => {
+    /* --- Live Calculation & Auto-Distribute --- */
+    function setupEntryListeners() {
+      // Manual input on partner fields
+      document.querySelectorAll('.profit-input').forEach(inp => {
         inp.addEventListener('input', calculateLiveTotal);
+      });
+      
+      // Master auto-distribute input
+      document.getElementById('masterNetProfit').addEventListener('input', function() {
+        const total = parseFloat(this.value) || 0;
+        Object.values(ironPeakPartners).forEach(p => {
+           const input = document.getElementById(`profit_${p.id}`);
+           if(input) {
+             const val = total * (p.percentage / 100);
+             input.value = val ? val.toFixed(2) : "";
+           }
+        });
+        calculateLiveTotal();
       });
     }
 
@@ -915,7 +1045,6 @@
       const display = document.getElementById('liveTotalAmount');
       display.innerHTML = `${sum.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} <small style="font-size:1rem">${dict[ironPeakLang].currency}</small>`;
       
-      // Visual feedback
       const box = document.getElementById('livePreviewBox');
       box.style.transform = 'scale(1.02)';
       setTimeout(() => box.style.transform = 'scale(1)', 200);
@@ -956,30 +1085,28 @@
         };
 
         if (editId) {
-          // Update existing
           const index = ironPeakData.findIndex(d => d.id == editId);
           if(index !== -1) ironPeakData[index] = entry;
           showToast(dict[ironPeakLang].succUpdate);
-          cancelEditing(); // reset UI
+          cancelEditing(); 
         } else {
-          // Add new
           ironPeakData.push(entry);
           showToast(dict[ironPeakLang].succSave);
         }
 
         ironPeakData.sort((a, b) => a.timestamp - b.timestamp);
         localStorage.setItem('ironPeakData', JSON.stringify(ironPeakData));
-        filteredData = [...ironPeakData]; // reset filter to show new data
+        filteredData = [...ironPeakData]; 
         
         this.reset();
         document.getElementById('date').valueAsDate = new Date();
+        document.getElementById('masterNetProfit').value = "";
         calculateLiveTotal();
         btn.innerHTML = originalHtml;
         
-      }, 400); // Fake small delay for premium feel
+      }, 400); 
     });
 
-    /* --- Edit & Delete Specific Entries --- */
     function editEntry(id) {
       const entry = ironPeakData.find(d => d.id === id);
       if(!entry) return;
@@ -988,6 +1115,7 @@
       
       document.getElementById('editEntryId').value = entry.id;
       document.getElementById('date').value = entry.date;
+      document.getElementById('masterNetProfit').value = ""; // clear auto calc during edit
       
       Object.keys(ironPeakPartners).forEach(pid => {
         const input = document.getElementById(`profit_${pid}`);
@@ -996,7 +1124,6 @@
 
       calculateLiveTotal();
       
-      // Update UI for Edit Mode
       document.getElementById('formMainTitle').innerText = dict[ironPeakLang].editModeTitle;
       document.getElementById('formSubTitle').innerText = dict[ironPeakLang].editModeDesc;
       document.getElementById('formMainTitle').style.color = 'var(--warning)';
@@ -1010,9 +1137,9 @@
       document.getElementById('entryForm').reset();
       document.getElementById('editEntryId').value = "";
       document.getElementById('date').valueAsDate = new Date();
+      document.getElementById('masterNetProfit').value = "";
       calculateLiveTotal();
       
-      // Reset UI
       document.getElementById('formMainTitle').innerText = dict[ironPeakLang].inputTitle;
       document.getElementById('formSubTitle').innerText = dict[ironPeakLang].inputDesc;
       document.getElementById('formMainTitle').style.color = 'var(--text-main)';
@@ -1027,22 +1154,20 @@
         ironPeakData = ironPeakData.filter(d => d.id !== id);
         localStorage.setItem('ironPeakData', JSON.stringify(ironPeakData));
         showToast(dict[ironPeakLang].succDel, 'success');
-        applyFilter(); // re-render table with current filter
+        applyFilter(); 
       }
     }
 
     /* --- Market TradingView Multi-Asset Logic --- */
     function loadMarket(symbol, btnElement) {
       currentMarketSymbol = symbol;
-      
-      // Update Tabs styling
       if(btnElement) {
         document.querySelectorAll('.market-tab').forEach(el => el.classList.remove('active'));
         btnElement.classList.add('active');
       }
 
       const container = document.getElementById('tv_container');
-      container.innerHTML = ''; // clear previous widget
+      container.innerHTML = ''; 
 
       const themeCode = currentTheme === 'dark' ? 'dark' : 'light';
       const bgColor = currentTheme === 'dark' ? '#060a0f' : '#f1f5f9';
@@ -1111,8 +1236,19 @@
         dailyData[item.date] += item.netProfit;
       });
 
+      // Calculate Current Capital
+      let activeCapital = 0;
+      ironPeakCapital.forEach(cap => {
+         activeCapital += (cap.type === 'increase' ? cap.amount : -cap.amount);
+      });
+
       // Render Dashboard Cards
       let cardsHtml = `
+        <div class="stat-card premium-card" style="border-bottom: 4px solid var(--info);">
+          <i class="fa-solid fa-building-columns stat-icon" style="color: var(--info);"></i>
+          <div class="stat-title">${dict[ironPeakLang].activeCapital}</div>
+          <div class="stat-value">${activeCapital.toLocaleString()} <span class="stat-currency">${dict[ironPeakLang].currency}</span></div>
+        </div>
         <div class="stat-card premium-card">
           <i class="fa-solid fa-vault stat-icon" style="background: linear-gradient(135deg, var(--primary-teal), var(--text-main)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
           <div class="stat-title">${dict[ironPeakLang].netProfit}</div>
@@ -1130,13 +1266,6 @@
           </div>
         `;
       });
-      cardsHtml += `
-        <div class="stat-card premium-card">
-          <i class="fa-regular fa-calendar-check stat-icon" style="color: var(--text-muted)"></i>
-          <div class="stat-title">${dict[ironPeakLang].days}</div>
-          <div class="stat-value">${daysCount} <span class="stat-currency">${dict[ironPeakLang].dayUnit}</span></div>
-        </div>
-      `;
       grid.innerHTML = cardsHtml;
 
       renderCharts(monthlyData, dailyData);
@@ -1201,7 +1330,7 @@
         data: {
           labels: dayLabels,
           datasets: [
-            { type: 'line', label: 'Cumulative', data: cumulativeValues, borderColor: '#D4AF37', backgroundColor: gradArea, fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0, hitRadius: 10, yAxisID: 'y1' },
+            { type: 'line', label: 'Cumulative Net', data: cumulativeValues, borderColor: '#D4AF37', backgroundColor: gradArea, fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0, hitRadius: 10, yAxisID: 'y1' },
             { type: 'bar', label: 'Daily Net', data: dayValues, backgroundColor: 'rgba(0, 166, 147, 0.8)', borderRadius: 4, yAxisID: 'y' }
           ]
         },
@@ -1247,7 +1376,6 @@
         return;
       }
 
-      // Sort descending for history view
       const sortedData = [...filteredData].sort((a, b) => b.timestamp - a.timestamp);
       const pKeys = Object.keys(ironPeakPartners);
       const isAdmin = currentUser.role === 'admin';
@@ -1258,7 +1386,7 @@
         tr.style.opacity = '0';
         
         let html = `<td data-label="${dict[ironPeakLang].thDate}">${item.date}</td>
-                    <td data-label="${dict[ironPeakLang].thMonth}" style="color:var(--text-muted); font-size:0.9rem;">${ironPeakLang === 'ar' ? item.monthAr : item.monthEn}</td>`;
+                    <td data-label="${dict[ironPeakLang].thMonth}" style="color:var(--text-muted); font-size:0.95rem;">${ironPeakLang === 'ar' ? item.monthAr : item.monthEn}</td>`;
         
         pKeys.forEach(k => {
           const val = item.profits[k] || 0;
@@ -1289,7 +1417,113 @@
       });
     }
 
-    /* --- Admin Logic --- */
+    /* --- NEW: Capital Management Logic --- */
+    document.getElementById('capitalForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('cap_amount').value);
+      if(!amount || amount <= 0) return;
+
+      const newCap = {
+        id: Date.now(),
+        date: document.getElementById('cap_date').value,
+        amount: amount,
+        type: document.getElementById('cap_type').value,
+        note: document.getElementById('cap_note').value.trim()
+      };
+
+      ironPeakCapital.push(newCap);
+      ironPeakCapital.sort((a,b) => new Date(b.date) - new Date(a.date)); // Sort latest first
+      localStorage.setItem('ironPeakCapital', JSON.stringify(ironPeakCapital));
+      
+      showToast(dict[ironPeakLang].succCap);
+      this.reset();
+      document.getElementById('cap_date').valueAsDate = new Date();
+      renderAdminCapital();
+      if(monthlyChartInstance) updateAnalytics(); // Update active capital card
+    });
+
+    function renderAdminCapital() {
+      const list = document.getElementById('capitalHistoryList');
+      list.innerHTML = '';
+      if(ironPeakCapital.length === 0) return;
+
+      ironPeakCapital.forEach(cap => {
+        const isInc = cap.type === 'increase';
+        const icon = isInc ? '<i class="fa-solid fa-arrow-trend-up"></i>' : '<i class="fa-solid fa-arrow-trend-down"></i>';
+        const colorClass = isInc ? 'up' : 'down';
+        const typeText = isInc ? dict[ironPeakLang].capIncrease : dict[ironPeakLang].capDecrease;
+
+        list.innerHTML += `
+          <div class="capital-item ${cap.type}">
+             <div>
+                <div style="font-weight:700; color:var(--text-main); margin-bottom: 2px;">${icon} ${typeText}</div>
+                <div class="capital-date">${cap.date} ${cap.note ? ' - ' + cap.note : ''}</div>
+             </div>
+             <div class="capital-amount ${colorClass}">${isInc ? '+' : '-'}${cap.amount.toLocaleString()}</div>
+          </div>
+        `;
+      });
+    }
+
+    /* --- NEW: Partner Percentages Logic --- */
+    function renderAdminPercentages() {
+      const list = document.getElementById('adminPercentagesList');
+      list.innerHTML = '';
+      
+      Object.values(ironPeakPartners).forEach(p => {
+        list.innerHTML += `
+          <div class="user-card" style="padding: 15px;">
+            <div class="user-info">
+              <div class="color-dot" style="background-color: ${p.color};"></div>
+              <div style="font-weight:800; font-size:1.1rem;">${ironPeakLang === 'ar' ? p.nameAr : p.nameEn}</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+               <input type="number" id="perc_admin_${p.id}" class="form-control perc-admin-input" step="0.001" value="${p.percentage || 0}" style="width: 100px; padding: 10px; text-align:center; font-weight:bold;">
+               <span style="font-weight:bold;">%</span>
+               <button type="button" class="btn-icon-small delete" onclick="adminDeletePartner('${p.id}')" title="حذف الشريك"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.querySelectorAll('.perc-admin-input').forEach(inp => {
+        inp.addEventListener('input', validatePercentagesSum);
+      });
+      validatePercentagesSum();
+    }
+
+    function validatePercentagesSum() {
+      let sum = 0;
+      document.querySelectorAll('.perc-admin-input').forEach(inp => {
+        sum += parseFloat(inp.value) || 0;
+      });
+      
+      const display = document.getElementById('percTotalDisplay');
+      const btn = document.getElementById('savePercBtn');
+      
+      // Allow minor floating point diffs (e.g., 99.999 to 100.001)
+      const isComplete = Math.abs(sum - 100) < 0.01;
+      
+      display.innerText = `${sum.toFixed(3).replace(/\.000$/, '')}%`;
+      display.style.color = isComplete ? 'var(--success)' : 'var(--danger)';
+      btn.disabled = !isComplete;
+      btn.style.opacity = isComplete ? '1' : '0.5';
+    }
+
+    document.getElementById('percentagesForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.querySelectorAll('.perc-admin-input').forEach(inp => {
+        const id = inp.id.replace('perc_admin_', '');
+        if(ironPeakPartners[id]) {
+          ironPeakPartners[id].percentage = parseFloat(inp.value) || 0;
+        }
+      });
+      localStorage.setItem('ironPeakPartners', JSON.stringify(ironPeakPartners));
+      showToast(dict[ironPeakLang].succPerc, 'success');
+      renderDynamicUI(); // Update UI everywhere
+    });
+
+    /* Add Partner */
     document.getElementById('addPartnerForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const id = document.getElementById('p_username').value.trim().toLowerCase();
@@ -1303,48 +1537,25 @@
         role: 'partner',
         nameAr: document.getElementById('p_nameAr').value,
         nameEn: document.getElementById('p_nameEn').value,
-        color: document.getElementById('p_color').value
+        color: document.getElementById('p_color').value,
+        percentage: 0 // Default 0 until admin distributes manually
       };
       
       localStorage.setItem('ironPeakPartners', JSON.stringify(ironPeakPartners));
       showToast(dict[ironPeakLang].succAdd);
       this.reset();
       renderDynamicUI();
-      if (monthlyChartInstance) updateAnalytics(); // refresh charts to include new partner
+      if (monthlyChartInstance) updateAnalytics(); 
     });
 
-    function renderAdminPartners() {
-      const list = document.getElementById('adminPartnersList');
-      list.innerHTML = '';
-      Object.values(ironPeakPartners).forEach(p => {
-        list.innerHTML += `
-          <div class="user-card">
-            <div class="user-info">
-              <div class="color-dot" style="background-color: ${p.color};"></div>
-              <div>
-                <div style="font-weight:700; color:var(--text-main); font-size:1.1rem;">${ironPeakLang === 'ar' ? p.nameAr : p.nameEn} <span style="font-size:0.8rem; color:var(--text-muted); font-weight:normal;">(@${p.id})</span></div>
-                <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">Role: ${p.role.toUpperCase()}</div>
-              </div>
-            </div>
-            <div class="row-actions">
-               <button class="btn-icon-small delete" onclick="adminDeletePartner('${p.id}')" title="حذف الشريك"><i class="fa-solid fa-trash-can"></i></button>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    // New Function: Admin Delete Partner
     function adminDeletePartner(partnerId) {
       const pName = ironPeakLang === 'ar' ? ironPeakPartners[partnerId].nameAr : ironPeakPartners[partnerId].nameEn;
       const confirmDelete = confirm(`تحذير: هل أنت متأكد من حذف الشريك (${pName}) نهائياً من النظام؟`);
       
       if(confirmDelete) {
-        // Ask about historical data
-        const deleteHistory = confirm(`هل ترغب أيضاً بمسح كافة البيانات والأرباح السابقة المرتبطة بالشريك (${pName})؟\n\n- اختر (OK / موافق): لـ مسح جميع أرباحه وإعادة حساب الصافي الكلي.\n- اختر (Cancel / إلغاء): لـ حذف حسابه فقط والاحتفاظ بأرباحه القديمة كجزء من السجل.`);
+        const deleteHistory = confirm(`هل ترغب أيضاً بمسح كافة البيانات والأرباح السابقة المرتبطة بالشريك (${pName})؟\n\n- اختر (OK): لمسح أرباحه وإعادة الحساب.\n- اختر (Cancel): لحذف حسابه فقط والاحتفاظ بالأرباح القديمة.`);
         
         if (deleteHistory) {
-          // Remove partner's profit from all history and recalculate Net
           ironPeakData.forEach(item => {
             if(item.profits && item.profits[partnerId] !== undefined) {
                item.netProfit -= item.profits[partnerId];
@@ -1355,14 +1566,13 @@
           filteredData = [...ironPeakData];
         }
 
-        // Delete Partner
         delete ironPeakPartners[partnerId];
         localStorage.setItem('ironPeakPartners', JSON.stringify(ironPeakPartners));
         
-        showToast("تم حذف الشريك بنجاح", "success");
-        renderDynamicUI(); // Re-render inputs and table headers
-        if(monthlyChartInstance) updateAnalytics(); // Re-render charts
-        updateTable(); // Re-render table data
+        showToast("تم الحذف بنجاح", "success");
+        renderDynamicUI(); 
+        if(monthlyChartInstance) updateAnalytics(); 
+        updateTable(); 
       }
     }
 
