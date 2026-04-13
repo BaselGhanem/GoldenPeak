@@ -1,36 +1,78 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>IronPeak Capital</title>
+  <title>IronPeak Capital - Premium FinTech</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Tajawal:wght@300;400;500;700&display=swap');
     
+    /* --- Design System & Theming --- */
     :root {
-      --bg-base: #060a0f;
-      --bg-surface: rgba(13, 22, 33, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.06);
-      --glass-highlight: rgba(255, 255, 255, 0.1);
+      /* Dark Theme (Default) */
+      --bg-base-dark: #060a0f;
+      --bg-surface-dark: rgba(13, 22, 33, 0.6);
+      --glass-border-dark: rgba(255, 255, 255, 0.08);
+      --glass-highlight-dark: rgba(255, 255, 255, 0.1);
+      --text-main-dark: #F8FAFC;
+      --text-muted-dark: #94A3B8;
+      --teal-glow-dark: rgba(0, 166, 147, 0.3);
+      --gold-glow-dark: rgba(212, 175, 55, 0.2);
       
+      /* Light Theme */
+      --bg-base-light: #f1f5f9;
+      --bg-surface-light: rgba(255, 255, 255, 0.7);
+      --glass-border-light: rgba(0, 0, 0, 0.08);
+      --glass-highlight-light: rgba(0, 0, 0, 0.05);
+      --text-main-light: #0f172a;
+      --text-muted-light: #64748b;
+      --teal-glow-light: rgba(0, 166, 147, 0.15);
+      --gold-glow-light: rgba(212, 175, 55, 0.15);
+
+      /* Brand Colors */
       --deep-teal: #002b24;
       --primary-teal: #00A693;
-      --teal-glow: rgba(0, 166, 147, 0.4);
-      
       --gold-premium: #D4AF37;
       --gold-light: #F9E596;
-      --gold-glow: rgba(212, 175, 55, 0.3);
-
-      --text-main: #F8FAFC;
-      --text-muted: #94A3B8;
       --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
       
+      /* Typography & Animation */
       --font-primary: 'Tajawal', 'Almarai', sans-serif;
       --font-heading: 'Almarai', sans-serif;
       --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-fast: 0.2s ease;
+    }
+    
+    /* Apply Theme Variables */
+    html[data-theme="dark"] {
+      --bg-base: var(--bg-base-dark);
+      --bg-surface: var(--bg-surface-dark);
+      --glass-border: var(--glass-border-dark);
+      --glass-highlight: var(--glass-highlight-dark);
+      --text-main: var(--text-main-dark);
+      --text-muted: var(--text-muted-dark);
+      --bg-glow-1: var(--teal-glow-dark);
+      --bg-glow-2: var(--gold-glow-dark);
+      --chart-grid: rgba(255,255,255,0.05);
+      --input-bg: rgba(0,0,0,0.3);
+    }
+
+    html[data-theme="light"] {
+      --bg-base: var(--bg-base-light);
+      --bg-surface: var(--bg-surface-light);
+      --glass-border: var(--glass-border-light);
+      --glass-highlight: var(--glass-highlight-light);
+      --text-main: var(--text-main-light);
+      --text-muted: var(--text-muted-light);
+      --bg-glow-1: var(--teal-glow-light);
+      --bg-glow-2: var(--gold-glow-light);
+      --chart-grid: rgba(0,0,0,0.05);
+      --input-bg: rgba(255,255,255,0.5);
     }
     
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -43,7 +85,7 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
-      transition: direction 0.3s ease;
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
 
     /* RTL/LTR Specifics */
@@ -54,196 +96,300 @@
     html[dir="ltr"] .nav-logo { flex-direction: row; }
     html[dir="ltr"] th, html[dir="ltr"] td { text-align: left; }
     html[dir="rtl"] th, html[dir="rtl"] td { text-align: right; }
-    html[dir="ltr"] td:first-child { border-radius: 12px 0 0 12px; }
-    html[dir="ltr"] td:last-child { border-radius: 0 12px 12px 0; }
+    html[dir="ltr"] td:first-child, html[dir="ltr"] th:first-child { border-radius: 12px 0 0 12px; }
+    html[dir="ltr"] td:last-child, html[dir="ltr"] th:last-child { border-radius: 0 12px 12px 0; }
+    html[dir="rtl"] td:first-child, html[dir="rtl"] th:first-child { border-radius: 0 12px 12px 0; }
+    html[dir="rtl"] td:last-child, html[dir="rtl"] th:last-child { border-radius: 12px 0 0 12px; }
 
+    /* Animated Background */
     .background-pattern {
       position: fixed; inset: 0; z-index: -1;
       background: 
-        radial-gradient(circle at 15% 20%, var(--teal-glow) 0%, transparent 40%),
-        radial-gradient(circle at 85% 80%, var(--gold-glow) 0%, transparent 40%);
-      filter: blur(80px); opacity: 0.6; animation: pulseGlow 10s infinite alternate;
+        radial-gradient(circle at 15% 20%, var(--bg-glow-1) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, var(--bg-glow-2) 0%, transparent 40%);
+      filter: blur(80px); opacity: 0.8; animation: pulseGlow 15s infinite alternate;
+      transition: background 0.5s ease;
     }
 
     @keyframes pulseGlow {
-      0% { transform: scale(1); opacity: 0.5; }
-      100% { transform: scale(1.1); opacity: 0.8; }
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.15); opacity: 1; }
     }
 
-    /* --- Authentication / Login Screen --- */
+    /* --- Authentication --- */
     #loginScreen {
       position: fixed; inset: 0; z-index: 9999;
       background: var(--bg-base);
       display: flex; justify-content: center; align-items: center;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .login-box {
       background: var(--bg-surface); padding: 50px 40px; border-radius: 24px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
       width: 90%; max-width: 420px; border: 1px solid var(--glass-border);
-      backdrop-filter: blur(20px); text-align: center;
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); text-align: center;
+      transform: translateY(0); animation: floatUp 0.8s ease-out forwards;
     }
-    .login-logo { font-family: var(--font-heading); font-size: 2.2rem; margin-bottom: 30px; color: var(--gold-premium); font-weight: bold;}
+    @keyframes floatUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .login-logo { font-family: var(--font-heading); font-size: 2.2rem; margin-bottom: 30px; color: var(--gold-premium); font-weight: 800; letter-spacing: -1px;}
     .login-logo i { background: linear-gradient(135deg, var(--gold-premium), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .login-box .form-group { margin-bottom: 20px; }
-
-    /* --- Navigation --- */
+    
+    /* --- Modern Navigation --- */
     .modern-nav {
       position: fixed; top: 0; left: 0; width: 100%;
-      background: rgba(6, 10, 15, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      background: var(--bg-surface); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--glass-border); z-index: 1000;
+      transition: background 0.5s ease, border-color 0.5s ease;
     }
     .nav-container {
       max-width: 1400px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem;
     }
-    .nav-logo { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+    .nav-logo { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; cursor: pointer;}
     .nav-logo i { background: linear-gradient(135deg, var(--gold-premium), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .nav-logo span { color: var(--gold-premium); font-weight: 400;}
-    .nav-menu { display: flex; gap: 10px; flex: 1; justify-content: center; }
+    .nav-menu { display: flex; gap: 8px; flex: 1; justify-content: center; }
     .nav-actions { display: flex; gap: 15px; align-items: center; }
     
     .nav-link {
-      text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 1.05rem;
-      padding: 10px 18px; border-radius: 12px; transition: all var(--transition-smooth);
+      text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 1.05rem;
+      padding: 10px 18px; border-radius: 12px; transition: all var(--transition-fast);
       cursor: pointer; border: 1px solid transparent; background: transparent;
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 8px; position: relative; overflow: hidden;
     }
     .nav-link:hover { color: var(--text-main); background: var(--glass-highlight); }
-    .nav-link.active { color: var(--gold-premium); background: var(--bg-surface); border-color: var(--glass-border); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .nav-link.active { color: var(--gold-premium); background: var(--glass-highlight); border-color: var(--glass-border); font-weight: 700;}
+    /* Ripple Effect */
+    .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; background-color: rgba(255, 255, 255, 0.3); }
+    @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
     .icon-btn {
       background: transparent; border: 1px solid var(--glass-border); color: var(--text-main);
-      padding: 10px; border-radius: 50%; cursor: pointer; transition: 0.3s;
+      padding: 10px; border-radius: 50%; cursor: pointer; transition: var(--transition-fast);
       display: flex; justify-content: center; align-items: center; width: 42px; height: 42px;
     }
-    .icon-btn:hover { background: var(--glass-highlight); color: var(--gold-premium); }
+    .icon-btn:hover { background: var(--glass-highlight); color: var(--gold-premium); transform: scale(1.05); }
 
-    /* --- Main App --- */
+    /* --- Smart Greeting --- */
+    .smart-greeting {
+      text-align: center; margin-bottom: 30px; animation: slideUp 0.6s ease forwards;
+    }
+    .smart-greeting h1 { font-family: var(--font-heading); font-size: 2.2rem; color: var(--text-main); margin-bottom: 5px; }
+    .smart-greeting p { color: var(--text-muted); font-size: 1.1rem; }
+
+    /* --- Main App Layout --- */
     #appContainer { display: none; }
-    .main-content { max-width: 1400px; margin: 110px auto 60px; padding: 0 20px; flex: 1; width: 100%; }
+    .main-content { max-width: 1400px; margin: 100px auto 60px; padding: 0 20px; flex: 1; width: 100%; }
     .tab-content { display: none; opacity: 0; transform: translateY(15px); transition: all 0.4s ease; }
     .tab-content.active { display: block; opacity: 1; transform: translateY(0); animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* --- Forms --- */
-    .form-container {
-      background: var(--bg-surface); padding: 40px; border-radius: 24px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-      max-width: 550px; margin: 0 auto; border: 1px solid var(--glass-border); backdrop-filter: blur(16px);
+    /* --- Universal UI Components --- */
+    .premium-card {
+      background: var(--bg-surface); border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.1);
+      border: 1px solid var(--glass-border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      transition: background 0.5s ease, border-color 0.5s ease;
     }
+
+    /* Forms */
+    .form-container { padding: 40px; max-width: 600px; margin: 0 auto; }
     .form-header { text-align: center; margin-bottom: 35px; }
     .form-header h2 { font-family: var(--font-heading); color: var(--text-main); font-size: 1.8rem; margin-bottom: 10px; }
     .form-header p { color: var(--text-muted); font-size: 0.95rem; }
 
     .form-group { position: relative; margin-bottom: 25px; }
     .form-control {
-      width: 100%; padding: 18px 16px 14px; background: rgba(0,0,0,0.2);
+      width: 100%; padding: 18px 16px 14px; background: var(--input-bg);
       border: 1px solid var(--glass-border); border-radius: 14px; 
-      font-family: inherit; font-size: 1.1rem; color: var(--text-main); transition: var(--transition-smooth);
+      font-family: inherit; font-size: 1.1rem; color: var(--text-main); transition: var(--transition-fast);
     }
-    .form-control:focus { outline: none; border-color: var(--gold-premium); background: rgba(0,0,0,0.4); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1); }
+    .form-control:focus { outline: none; border-color: var(--gold-premium); background: var(--bg-base); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1); }
     .form-control::placeholder { color: transparent; }
-    .form-label { position: absolute; top: 18px; color: var(--text-muted); transition: var(--transition-smooth); pointer-events: none; font-size: 1rem; }
+    .form-label { position: absolute; top: 18px; color: var(--text-muted); transition: var(--transition-fast); pointer-events: none; font-size: 1rem; font-weight: 500;}
     .form-control:focus ~ .form-label, .form-control:not(:placeholder-shown) ~ .form-label {
-      transform: translateY(-28px) scale(0.85); color: var(--gold-premium); background: var(--bg-base); padding: 0 8px; border-radius: 4px;
+      transform: translateY(-28px) scale(0.85); color: var(--gold-premium); background: var(--bg-surface); padding: 0 8px; border-radius: 4px; border: 1px solid var(--glass-border);
     }
+
+    /* Live Preview Box */
+    .live-preview-box {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+      border: 1px dashed var(--gold-premium); border-radius: 14px; padding: 20px;
+      text-align: center; margin-bottom: 25px; display: flex; flex-direction: column; gap: 5px;
+      transition: all var(--transition-fast);
+    }
+    .live-preview-box span { color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;}
+    .live-preview-box h3 { color: var(--gold-premium); font-size: 2rem; font-family: var(--font-heading); margin: 0; }
 
     .btn-submit {
       width: 100%; padding: 18px; background: linear-gradient(135deg, var(--gold-premium), #b8860b); color: #000;
-      border: none; border-radius: 14px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: var(--transition-smooth);
+      border: none; border-radius: 14px; font-size: 1.2rem; font-weight: 800; cursor: pointer; transition: var(--transition-fast);
       font-family: inherit; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
     }
     .btn-submit::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: 0.5s; }
-    .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(212, 175, 55, 0.3); }
+    .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(212, 175, 55, 0.4); }
     .btn-submit:hover::after { left: 100%; }
+    .btn-submit:active { transform: translateY(1px); }
 
-    /* --- Widgets / Cards Grid --- */
-    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px; }
+    /* --- Analytics Dashboards --- */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 30px; }
     .stat-card {
-      position: relative; background: var(--bg-surface); padding: 25px 20px; border-radius: 20px; text-align: center; 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid var(--glass-border); transition: var(--transition-smooth);
-      backdrop-filter: blur(12px); overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative; padding: 30px 25px; text-align: center; 
+      overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
     .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary-teal), var(--gold-premium)); opacity: 0; transition: var(--transition-smooth); }
-    .stat-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.15); }
+    .stat-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-color: var(--gold-glow-dark); }
     .stat-card:hover::before { opacity: 1; }
     
-    .stat-icon { font-size: 2.2rem; margin-bottom: 12px; background: linear-gradient(135deg, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .stat-title { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 500;}
-    .stat-value { font-size: 2rem; font-weight: 700; color: var(--text-main); font-family: var(--font-heading); letter-spacing: 1px;}
-    .stat-currency { font-size: 0.9rem; color: var(--text-muted); font-weight: 400; margin-inline-start: 5px; }
+    .stat-icon { font-size: 2.5rem; margin-bottom: 15px; }
+    .stat-title { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;}
+    .stat-value { font-size: 2.2rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading); letter-spacing: 1px;}
+    .stat-currency { font-size: 1rem; color: var(--text-muted); font-weight: 400; margin-inline-start: 5px; }
 
-    /* --- Charts & TradingView --- */
+    /* Charts */
     .charts-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 30px; }
-    .chart-wrapper { background: var(--bg-surface); padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid var(--glass-border); height: 450px; backdrop-filter: blur(12px); }
-    .chart-title { font-family: var(--font-heading); color: var(--text-main); font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .chart-wrapper { padding: 25px; height: 480px; position: relative; }
+    .chart-title { font-family: var(--font-heading); color: var(--text-main); font-size: 1.3rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-weight: 700;}
     .chart-title i { color: var(--gold-premium); }
     
-    .tradingview-widget-wrapper { background: var(--bg-surface); border-radius: 24px; overflow: hidden; height: 600px; border: 1px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    /* Loading Skeletons */
+    .skeleton { background: linear-gradient(90deg, var(--glass-highlight) 25%, var(--glass-border) 50%, var(--glass-highlight) 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 12px; }
+    @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-    /* --- Table --- */
-    .table-container { background: var(--bg-surface); border-radius: 24px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border: 1px solid var(--glass-border); overflow-x: auto; backdrop-filter: blur(12px); }
-    .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-    .header-actions h2 { font-family: var(--font-heading); color: var(--text-main); font-size: 1.6rem; }
-    .btn-action {
-      background: rgba(255,255,255,0.05); color: var(--text-main); padding: 12px 20px; border: 1px solid var(--glass-border); 
-      border-radius: 12px; cursor: pointer; font-family: inherit; transition: var(--transition-smooth); display: flex; gap: 8px; align-items: center; font-weight: 600;
+    /* --- Market TradingView Tabs --- */
+    .market-tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+    .market-tab { 
+      padding: 10px 20px; background: var(--bg-surface); border: 1px solid var(--glass-border); 
+      border-radius: 12px; color: var(--text-muted); cursor: pointer; font-weight: 600; white-space: nowrap; transition: var(--transition-fast);
     }
+    .market-tab:hover { background: var(--glass-highlight); color: var(--text-main); }
+    .market-tab.active { background: linear-gradient(135deg, var(--gold-premium), #b8860b); color: #000; border-color: transparent; }
+    .tradingview-widget-wrapper { height: 650px; overflow: hidden; padding: 10px;}
+
+    /* --- History Table & Filtering --- */
+    .filter-bar {
+      display: flex; gap: 15px; flex-wrap: wrap; background: var(--glass-highlight); padding: 20px; border-radius: 16px; margin-bottom: 25px; align-items: flex-end; border: 1px solid var(--glass-border);
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
+    .filter-group label { color: var(--text-muted); font-size: 0.9rem; font-weight: 600; }
+    .filter-group input { padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--bg-base); color: var(--text-main); font-family: inherit; }
+    .filter-btn { padding: 12px 24px; background: var(--primary-teal); color: #fff; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; gap: 8px; align-items: center; justify-content: center;}
+    .filter-btn:hover { background: var(--deep-teal); }
+    .filter-btn-reset { background: transparent; border: 1px solid var(--glass-border); color: var(--text-main); }
+    .filter-btn-reset:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
+
+    .table-container { padding: 30px; overflow-x: auto; }
+    .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;}
+    .header-actions h2 { font-family: var(--font-heading); color: var(--text-main); font-size: 1.6rem; margin:0;}
+    .action-group { display: flex; gap: 10px; }
+    .btn-action {
+      background: var(--bg-base); color: var(--text-main); padding: 12px 20px; border: 1px solid var(--glass-border); 
+      border-radius: 12px; cursor: pointer; font-family: inherit; transition: var(--transition-fast); display: flex; gap: 8px; align-items: center; font-weight: 700;
+    }
+    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     .btn-action.btn-export { background: linear-gradient(135deg, var(--primary-teal), var(--deep-teal)); border: none; color: #fff;}
     .btn-action.btn-clear { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
+    .btn-action.btn-clear:hover { background: rgba(239, 68, 68, 0.2); }
     
-    table { width: 100%; border-collapse: separate; border-spacing: 0 6px; min-width: 800px; }
-    th { padding: 16px 12px; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; text-transform: uppercase; border-bottom: 1px solid var(--glass-border); }
-    td { padding: 16px 12px; background: rgba(255,255,255,0.02); color: var(--text-main); font-weight: 500; transition: var(--transition-smooth); }
-    tr:hover td { background: rgba(255,255,255,0.06); transform: scale(1.01); }
-    .net-profit-cell { font-weight: 700; color: var(--gold-premium); font-size: 1.1rem; }
-    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; display: inline-block; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 900px; }
+    th { padding: 18px 15px; color: var(--text-muted); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; border-bottom: 2px solid var(--glass-border); background: var(--glass-highlight); }
+    td { padding: 18px 15px; background: var(--bg-surface); color: var(--text-main); font-weight: 500; transition: var(--transition-fast); border-top: 1px solid transparent; border-bottom: 1px solid transparent; }
+    tr:hover td { background: var(--glass-highlight); border-color: var(--glass-border); }
+    html[dir="rtl"] tr:hover td:first-child { border-right: 1px solid var(--glass-border); }
+    html[dir="rtl"] tr:hover td:last-child { border-left: 1px solid var(--glass-border); }
+    html[dir="ltr"] tr:hover td:first-child { border-left: 1px solid var(--glass-border); }
+    html[dir="ltr"] tr:hover td:last-child { border-right: 1px solid var(--glass-border); }
+    
+    .net-profit-cell { font-weight: 800; color: var(--gold-premium); font-size: 1.15rem; }
+    .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; display: inline-block; letter-spacing: 0.5px;}
+
+    /* Row Actions (Edit/Delete) */
+    .row-actions { display: flex; gap: 8px; justify-content: center; }
+    .btn-icon-small { 
+      background: transparent; border: none; padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; color: var(--text-muted); font-size: 1rem;
+    }
+    .btn-icon-small.edit:hover { background: rgba(212, 175, 55, 0.1); color: var(--gold-premium); }
+    .btn-icon-small.delete:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
 
     /* Admin Settings List */
-    .user-list { margin-top: 20px; }
-    .user-card { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 12px; margin-bottom: 10px; }
+    .user-list { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;}
+    .user-card { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--glass-highlight); border: 1px solid var(--glass-border); border-radius: 16px; transition: 0.3s; }
+    .user-card:hover { transform: translateY(-3px); border-color: var(--gold-glow-dark); }
     .user-info { display: flex; align-items: center; gap: 15px; }
-    .color-dot { width: 16px; height: 16px; border-radius: 50%; }
+    .color-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--bg-surface); }
 
-    /* --- Toasts & Loaders --- */
-    .toast-container { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;}
+    /* --- Smart Toasts --- */
+    .toast-container { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column-reverse; gap: 10px; pointer-events: none;}
     .toast {
-      background: rgba(10, 25, 36, 0.95); border: 1px solid var(--gold-premium); color: var(--text-main); padding: 14px 20px;
-      border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 12px; font-weight: 500;
-      opacity: 0; transform: translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter: blur(10px);
+      background: var(--bg-surface); border: 1px solid var(--glass-border); color: var(--text-main); padding: 16px 24px;
+      border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 8px; font-weight: 600;
+      opacity: 0; transform: translateY(30px) scale(0.9); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); min-width: 300px; overflow: hidden; position: relative;
     }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .toast i { color: var(--gold-premium); font-size: 1.2rem; }
-    .toast.error { border-color: var(--danger); }
+    .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+    .toast-content { display: flex; align-items: center; gap: 12px; }
+    .toast i { font-size: 1.3rem; }
+    .toast.success { border-left: 4px solid var(--success); }
+    .toast.success i { color: var(--success); }
+    .toast.error { border-left: 4px solid var(--danger); }
     .toast.error i { color: var(--danger); }
+    html[dir="rtl"] .toast.success { border-left: none; border-right: 4px solid var(--success); }
+    html[dir="rtl"] .toast.error { border-left: none; border-right: 4px solid var(--danger); }
+    
+    .toast-progress { position: absolute; bottom: 0; left: 0; height: 3px; background: rgba(255,255,255,0.2); width: 100%; }
+    .toast-progress-bar { height: 100%; background: var(--text-main); width: 100%; animation: progress shrink linear forwards; }
+    .toast.success .toast-progress-bar { background: var(--success); }
+    .toast.error .toast-progress-bar { background: var(--danger); }
+    @keyframes shrink { from { width: 100%; } to { width: 0%; } }
 
-    /* --- MOBILE APP UI --- */
+    /* --- PREMIUM MOBILE APP UI (Card View for Tables) --- */
     @media (max-width: 768px) {
       .nav-container { padding: 15px; }
-      .nav-logo { font-size: 1.3rem; }
+      .nav-logo { font-size: 1.4rem; }
       .nav-menu {
         position: fixed; bottom: 0; left: 0; width: 100%; 
-        background: rgba(6, 10, 15, 0.95); border-top: 1px solid var(--glass-border);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        padding: 10px 5px; padding-bottom: calc(10px + env(safe-area-inset-bottom));
-        justify-content: space-around; z-index: 1000;
+        background: var(--bg-surface); border-top: 1px solid var(--glass-border);
+        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+        padding: 10px 5px calc(10px + env(safe-area-inset-bottom));
+        justify-content: space-around; z-index: 1000; box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
       }
-      .nav-link { flex-direction: column; font-size: 0.75rem; padding: 8px 4px; gap: 5px; border-radius: 10px; width: 22%; text-align: center;}
-      .nav-link i { font-size: 1.2rem; margin: 0; }
+      .nav-link { flex-direction: column; font-size: 0.75rem; padding: 10px 4px; gap: 6px; border-radius: 14px; width: 22%; text-align: center; font-weight: 500;}
+      .nav-link i { font-size: 1.3rem; margin: 0; }
       .nav-link span.tab-text { display: block; white-space: nowrap; font-size: 0.7rem;}
+      .nav-link.active { transform: translateY(-5px); box-shadow: 0 5px 15px var(--gold-glow-dark); }
       
-      .main-content { margin-top: 80px; margin-bottom: 90px; padding: 0 15px; }
+      .main-content { margin-top: 80px; margin-bottom: 100px; padding: 0 15px; }
+      .smart-greeting h1 { font-size: 1.8rem; }
       .charts-container { grid-template-columns: 1fr; }
-      .chart-wrapper { height: 350px; padding: 15px; }
-      .header-actions { flex-direction: column; gap: 15px; align-items: stretch;}
-      .header-actions > div { display: flex; flex-direction: column; gap: 10px; }
-      .btn-action { justify-content: center; }
-      .form-container, .table-container { padding: 25px 15px; }
-      .tradingview-widget-wrapper { height: 450px; }
+      .chart-wrapper { height: 380px; padding: 15px; }
       
-      /* Hide user info on mobile top bar, keep icons */
-      .nav-actions span { display: none; }
+      .header-actions { flex-direction: column; gap: 15px; align-items: stretch;}
+      .action-group { display: flex; flex-direction: column; gap: 10px; width: 100%;}
+      .btn-action { justify-content: center; width: 100%;}
+      .form-container, .table-container { padding: 25px 15px; }
+      .tradingview-widget-wrapper { height: 500px; }
+      
+      .nav-actions span { display: none; } /* Hide user info top bar */
+      .toast-container { bottom: 100px; width: 90%; }
+
+      /* Mobile Card View for Table */
+      table, thead, tbody, th, td, tr { display: block; }
+      thead tr { position: absolute; top: -9999px; left: -9999px; }
+      table { min-width: 100%; border-spacing: 0; }
+      tr { 
+        border: 1px solid var(--glass-border); margin-bottom: 15px; border-radius: 16px; 
+        padding: 15px; background: var(--glass-highlight); position: relative;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      }
+      td { position: relative; padding: 12px 15px; padding-inline-start: 50%; text-align: end; border: none; font-size: 0.95rem; border-bottom: 1px solid var(--glass-border); }
+      td:last-child { border-bottom: none; }
+      html[dir="rtl"] td { padding-inline-start: 50%; text-align: left; }
+      td::before { 
+        content: attr(data-label); position: absolute; top: 12px; inset-inline-start: 15px; width: 45%; 
+        white-space: nowrap; font-weight: 700; color: var(--text-muted); text-align: start; 
+      }
+      .row-actions { justify-content: flex-end; padding-top: 10px; }
     }
   </style>
 </head>
@@ -254,17 +400,17 @@
   <div id="loginScreen">
     <div class="login-box">
       <div class="login-logo"><i class="fa-solid fa-gem"></i> IronPeak <span>Capital</span></div>
-      <h3 id="loginTitleText" style="margin-bottom: 25px; color: var(--text-muted); font-weight: 400;">تسجيل الدخول</h3>
+      <h3 id="loginTitleText" style="margin-bottom: 25px; color: var(--text-muted); font-weight: 500;">تسجيل الدخول للنظام</h3>
       <form id="loginForm">
         <div class="form-group">
-          <input type="text" id="loginUser" class="form-control" required placeholder=" ">
+          <input type="text" id="loginUser" class="form-control" required placeholder=" " autocomplete="username">
           <label for="loginUser" class="form-label" data-i18n="username">اسم المستخدم</label>
         </div>
         <div class="form-group">
-          <input type="password" id="loginPass" class="form-control" required placeholder=" ">
+          <input type="password" id="loginPass" class="form-control" required placeholder=" " autocomplete="current-password">
           <label for="loginPass" class="form-label" data-i18n="password">كلمة المرور</label>
         </div>
-        <button type="submit" class="btn-submit" data-i18n="loginBtn">دخول</button>
+        <button type="submit" class="btn-submit" data-i18n="loginBtn">دخول آمن</button>
       </form>
     </div>
   </div>
@@ -272,12 +418,15 @@
   <div id="appContainer">
     <nav class="modern-nav">
       <div class="nav-container">
-        <div class="nav-logo">
+        <div class="nav-logo" onclick="switchTab('analytics')">
           <i class="fa-solid fa-gem"></i> <span data-i18n="brand1">IronPeak</span>&nbsp;<span style="color:var(--text-main)" data-i18n="brand2">Capital</span>
         </div>
         
         <div class="nav-actions">
-          <span id="currentUserDisplay" style="color: var(--gold-premium); font-weight: bold; margin-inline-end: 10px;"></span>
+          <span id="currentUserDisplay" style="color: var(--text-muted); font-weight: 600; margin-inline-end: 10px;"></span>
+          <button class="icon-btn" onclick="toggleTheme()" title="تغيير المظهر" id="themeBtn">
+            <i class="fa-regular fa-moon"></i>
+          </button>
           <button class="icon-btn" onclick="toggleLanguage()" title="تغيير اللغة">
             <i class="fa-solid fa-language"></i>
           </button>
@@ -287,17 +436,17 @@
         </div>
       </div>
       <div class="nav-menu">
-        <button class="nav-link active" onclick="switchTab('input')" id="navInput">
-          <i class="fa-solid fa-pen-nib"></i> <span class="tab-text" data-i18n="navInput">إدخال</span>
+        <button class="nav-link active" onclick="switchTab('analytics')" id="navAnalytics">
+          <i class="fa-solid fa-chart-pie"></i> <span class="tab-text" data-i18n="navAnalytics">لوحة القيادة</span>
         </button>
-        <button class="nav-link" onclick="switchTab('analytics')" id="navAnalytics">
-          <i class="fa-solid fa-chart-pie"></i> <span class="tab-text" data-i18n="navAnalytics">تحليلات</span>
+        <button class="nav-link" onclick="switchTab('input')" id="navInput">
+          <i class="fa-solid fa-pen-nib"></i> <span class="tab-text" data-i18n="navInput">إدخال/تعديل</span>
         </button>
         <button class="nav-link" onclick="switchTab('market')" id="navMarket">
-          <i class="fa-solid fa-chart-line"></i> <span class="tab-text" data-i18n="navMarket">السوق</span>
+          <i class="fa-solid fa-chart-line"></i> <span class="tab-text" data-i18n="navMarket">الأسواق</span>
         </button>
         <button class="nav-link" onclick="switchTab('transactions')" id="navHistory">
-          <i class="fa-solid fa-clock-rotate-left"></i> <span class="tab-text" data-i18n="navHistory">السجل</span>
+          <i class="fa-solid fa-clock-rotate-left"></i> <span class="tab-text" data-i18n="navHistory">السجل المالي</span>
         </button>
         <button class="nav-link" onclick="switchTab('admin')" id="navAdmin" style="display: none;">
           <i class="fa-solid fa-user-gear"></i> <span class="tab-text" data-i18n="navAdmin">تعريفات</span>
@@ -307,132 +456,119 @@
 
     <main class="main-content">
       
-      <section id="input" class="tab-content active">
-        <div class="form-container">
-          <div class="form-header">
-            <h2 data-i18n="inputTitle">إدخال الأرباح</h2>
-            <p data-i18n="inputDesc">أدخل صافي أرباح الشركاء لهذا اليوم</p>
+      <section id="analytics" class="tab-content active">
+        <div class="smart-greeting" id="greetingArea">
           </div>
-          <form id="entryForm">
-            <div class="form-group">
-              <input type="date" id="date" class="form-control" required placeholder=" ">
-              <label for="date" class="form-label" data-i18n="date">التاريخ</label>
-            </div>
-            <div id="dynamicPartnerInputs"></div>
 
-            <button type="submit" class="btn-submit">
-              <i class="fa-solid fa-check-double"></i> <span data-i18n="saveBtn">اعتماد البيانات</span>
-            </button>
-          </form>
-        </div>
-      </section>
-
-      <section id="analytics" class="tab-content">
         <div class="cards-grid" id="analyticsCardsGrid">
-          </div>
+          <div class="skeleton" style="height: 180px;"></div>
+          <div class="skeleton" style="height: 180px;"></div>
+          <div class="skeleton" style="height: 180px;"></div>
+        </div>
 
         <div class="charts-container">
-          <div class="chart-wrapper">
-            <div class="chart-title"><i class="fa-solid fa-chart-column"></i> <span data-i18n="chartMonthly">الأرباح الشهرية للشركاء</span></div>
-            <div style="position: relative; height: 90%; width: 100%;">
+          <div class="premium-card chart-wrapper">
+            <div class="chart-title"><i class="fa-solid fa-chart-column"></i> <span data-i18n="chartMonthly">الأداء الشهري للشركاء</span></div>
+            <div style="position: relative; height: 85%; width: 100%;">
               <canvas id="monthlyChart"></canvas>
             </div>
           </div>
-          <div class="chart-wrapper">
-            <div class="chart-title"><i class="fa-solid fa-chart-area"></i> <span data-i18n="chartDaily">تراكمي وصافي الربح اليومي</span></div>
-            <div style="position: relative; height: 90%; width: 100%;">
+          <div class="premium-card chart-wrapper">
+            <div class="chart-title"><i class="fa-solid fa-chart-area"></i> <span data-i18n="chartDaily">نمو رأس المال وصافي الربح</span></div>
+            <div style="position: relative; height: 85%; width: 100%;">
               <canvas id="dailyCumulativeChart"></canvas>
             </div>
           </div>
         </div>
       </section>
 
+      <section id="input" class="tab-content">
+        <div class="premium-card form-container">
+          <div class="form-header">
+            <h2 id="formMainTitle" data-i18n="inputTitle">إدخال أرباح جديدة</h2>
+            <p id="formSubTitle" data-i18n="inputDesc">أدخل صافي أرباح الشركاء لهذا اليوم بدقة</p>
+          </div>
+          <form id="entryForm">
+            <input type="hidden" id="editEntryId" value="">
+            
+            <div class="form-group">
+              <input type="date" id="date" class="form-control" required placeholder=" ">
+              <label for="date" class="form-label" data-i18n="date">التاريخ</label>
+            </div>
+            
+            <div id="dynamicPartnerInputs"></div>
+
+            <div class="live-preview-box" id="livePreviewBox">
+              <span data-i18n="liveTotal">إجمالي الربح الصافي المتوقع</span>
+              <h3 id="liveTotalAmount">0.00 <small style="font-size:1rem" data-i18n="currency">JD</small></h3>
+            </div>
+
+            <button type="submit" class="btn-submit" id="saveDataBtn">
+              <i class="fa-solid fa-check-double"></i> <span data-i18n="saveBtn">اعتماد البيانات</span>
+            </button>
+            <button type="button" class="btn-action btn-clear" id="cancelEditBtn" style="display:none; width: 100%; justify-content: center; margin-top: 10px;" onclick="cancelEditing()">
+              <i class="fa-solid fa-times"></i> <span data-i18n="cancelEdit">إلغاء التعديل</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
       <section id="market" class="tab-content">
-        <div class="tradingview-widget-wrapper">
-          <div class="tradingview-widget-container" style="height:100%;width:100%">
-            <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
-            <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/XAUUSD/?exchange=OANDA" rel="noopener nofollow" target="_blank"><span class="blue-text">XAUUSD quote</span></a><span class="trademark">&nbsp;by TradingView</span></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-            {
-              "lineWidth": 2,
-              "lineType": 0,
-              "chartType": "area",
-              "fontColor": "rgb(106, 109, 120)",
-              "gridLineColor": "rgba(242, 242, 242, 0.06)",
-              "volumeUpColor": "rgba(212, 175, 55, 0.5)",
-              "volumeDownColor": "rgba(239, 68, 68, 0.5)",
-              "backgroundColor": "#060a0f",
-              "widgetFontColor": "#DBDBDB",
-              "upColor": "#D4AF37",
-              "downColor": "#ef4444",
-              "borderUpColor": "#D4AF37",
-              "borderDownColor": "#ef4444",
-              "wickUpColor": "#D4AF37",
-              "wickDownColor": "#ef4444",
-              "colorTheme": "dark",
-              "isTransparent": true,
-              "locale": "en",
-              "chartOnly": false,
-              "scalePosition": "right",
-              "scaleMode": "Normal",
-              "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
-              "valuesTracking": "1",
-              "changeMode": "price-and-percent",
-              "symbols": [
-                [
-                  "OANDA:XAUUSD|1D"
-                ]
-              ],
-              "dateRanges": [
-                "1d|1",
-                "1m|30",
-                "3m|60",
-                "12m|1D",
-                "60m|1W",
-                "all|1M"
-              ],
-              "fontSize": "10",
-              "headerFontSize": "medium",
-              "autosize": true,
-              "width": "100%",
-              "height": "100%",
-              "noTimeScale": false,
-              "hideDateRanges": false,
-              "hideMarketStatus": false,
-              "hideSymbolLogo": false
-            }
-            </script>
+        <div class="premium-card" style="padding: 20px;">
+          <div class="market-tabs">
+            <button class="market-tab active" onclick="loadMarket('OANDA:XAUUSD', this)">الذهب (XAU/USD)</button>
+            <button class="market-tab" onclick="loadMarket('SP:SPX', this)">S&P 500</button>
+            <button class="market-tab" onclick="loadMarket('BINANCE:BTCUSDT', this)">Bitcoin (BTC)</button>
+            <button class="market-tab" onclick="loadMarket('OANDA:EURUSD', this)">EUR/USD</button>
+            <button class="market-tab" onclick="loadMarket('NASDAQ:AAPL', this)">Apple Inc.</button>
           </div>
-          </div>
+          <div class="tradingview-widget-wrapper" id="tv_container">
+            </div>
+        </div>
       </section>
 
       <section id="transactions" class="tab-content">
-        <div class="table-container">
+        <div class="premium-card table-container">
+          
           <div class="header-actions">
-            <h2><i class="fa-solid fa-list-check" style="color:var(--gold-premium); margin-inline-end:10px;"></i> <span data-i18n="historyTitle">السجل المالي</span></h2>
-            <div>
-              <button class="btn-action btn-clear" onclick="clearData()"><i class="fa-solid fa-trash-can"></i> <span data-i18n="clearBtn">مسح</span></button>
-              <button class="btn-action btn-export" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> <span data-i18n="exportBtn">تصدير</span></button>
+            <h2><i class="fa-solid fa-list-check" style="color:var(--gold-premium); margin-inline-end:10px;"></i> <span data-i18n="historyTitle">السجل المالي التفصيلي</span></h2>
+            <div class="action-group">
+              <button class="btn-action btn-clear" onclick="clearData()"><i class="fa-solid fa-trash-can"></i> <span data-i18n="clearBtn">مسح الكل</span></button>
+              <button class="btn-action btn-export" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> <span data-i18n="exportBtn">تصدير Excel</span></button>
             </div>
           </div>
+
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label data-i18n="filterFrom">من تاريخ</label>
+              <input type="date" id="filterFrom">
+            </div>
+            <div class="filter-group">
+              <label data-i18n="filterTo">إلى تاريخ</label>
+              <input type="date" id="filterTo">
+            </div>
+            <button class="filter-btn" onclick="applyFilter()"><i class="fa-solid fa-filter"></i> <span data-i18n="applyFilter">تطبيق الفلتر</span></button>
+            <button class="filter-btn filter-btn-reset" onclick="resetFilter()"><i class="fa-solid fa-rotate-left"></i> <span data-i18n="resetFilter">إلغاء</span></button>
+          </div>
+
           <table id="dataTable">
             <thead>
-              <tr id="tableHeaderRow">
-                </tr>
+              <tr id="tableHeaderRow"></tr>
             </thead>
-            <tbody id="tableBody"></tbody>
+            <tbody id="tableBody">
+              </tbody>
           </table>
         </div>
       </section>
 
       <section id="admin" class="tab-content">
-        <div class="form-container" style="max-width: 800px;">
+        <div class="premium-card form-container" style="max-width: 900px;">
           <div class="form-header">
-            <h2 data-i18n="adminTitle">إدارة الشركاء</h2>
-            <p data-i18n="adminDesc">إضافة شركاء جدد للنظام</p>
+            <h2 data-i18n="adminTitle">إدارة الشركاء والنظام</h2>
+            <p data-i18n="adminDesc">إضافة شركاء جدد وصلاحيات الدخول للأدوار المختلفة</p>
           </div>
           
-          <form id="addPartnerForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <form id="addPartnerForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
             <div class="form-group" style="margin-bottom:0;">
               <input type="text" id="p_username" class="form-control" required placeholder=" ">
               <label for="p_username" class="form-label" data-i18n="pUsername">اسم المستخدم (Login)</label>
@@ -449,15 +585,15 @@
               <input type="text" id="p_nameEn" class="form-control" required placeholder=" ">
               <label for="p_nameEn" class="form-label" data-i18n="pNameEn">الاسم (انجليزي)</label>
             </div>
-            <div class="form-group" style="grid-column: span 2;">
-              <label style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 5px; display:block;" data-i18n="pColor">لون الشريك في الرسوم البيانية</label>
-              <input type="color" id="p_color" value="#00A693" style="width: 100%; height: 50px; border:none; border-radius: 12px; cursor:pointer; background: transparent;">
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label style="color:var(--text-muted); font-size: 0.95rem; font-weight:600; margin-bottom: 10px; display:block;" data-i18n="pColor">اللون التعريفي (Chart Color)</label>
+              <input type="color" id="p_color" value="#00A693" style="width: 100%; height: 60px; border:2px solid var(--glass-border); border-radius: 12px; cursor:pointer; background: transparent; padding: 5px;">
             </div>
-            <button type="submit" class="btn-submit" style="grid-column: span 2;"><i class="fa-solid fa-plus"></i> <span data-i18n="addPartnerBtn">إضافة الشريك</span></button>
+            <button type="submit" class="btn-submit" style="grid-column: 1 / -1;"><i class="fa-solid fa-user-plus"></i> <span data-i18n="addPartnerBtn">حفظ وإضافة الشريك</span></button>
           </form>
 
-          <div style="margin-top: 40px;">
-            <h3 style="color:var(--text-main); margin-bottom:15px; font-family:var(--font-heading);" data-i18n="currentPartners">الشركاء الحاليين</h3>
+          <div style="margin-top: 50px; border-top: 1px solid var(--glass-border); padding-top: 30px;">
+            <h3 style="color:var(--text-main); margin-bottom:15px; font-family:var(--font-heading); font-size:1.4rem;" data-i18n="currentPartners">الشركاء الحاليين في النظام</h3>
             <div id="adminPartnersList" class="user-list"></div>
           </div>
         </div>
@@ -467,57 +603,102 @@
   </div>
 
   <script>
-    /* --- State Management --- */
+    /* --- State Management & Configuration --- */
     const defaultPartners = {
-      omar: { id: 'omar', pass: '2026', role: 'partner', nameAr: 'عمر', nameEn: 'Omar', color: '#00E676' },
+      omar: { id: 'omar', pass: '2026', role: 'partner', nameAr: 'عمر', nameEn: 'Omar', color: '#10b981' },
       rakan: { id: 'rakan', pass: '2026', role: 'partner', nameAr: 'راكان', nameEn: 'Rakan', color: '#D4AF37' }
     };
-    const adminUser = { id: 'admin', pass: 'admin2026', role: 'admin', nameAr: 'مدير النظام', nameEn: 'Admin' };
+    const adminUser = { id: 'admin', pass: 'admin2026', role: 'admin', nameAr: 'مدير النظام', nameEn: 'System Admin' };
 
     let ironPeakLang = localStorage.getItem('ironPeakLang') || 'ar';
+    let currentTheme = localStorage.getItem('ironPeakTheme') || 'dark';
     let ironPeakPartners = JSON.parse(localStorage.getItem('ironPeakPartners')) || defaultPartners;
     let ironPeakData = JSON.parse(localStorage.getItem('ironPeakData')) || [];
     let currentUser = JSON.parse(sessionStorage.getItem('ironPeakUser')) || null;
     
+    // Filtering State
+    let filteredData = [...ironPeakData];
+    
     let monthlyChartInstance = null;
     let dailyChartInstance = null;
+    let currentMarketSymbol = 'OANDA:XAUUSD';
 
     /* --- Dictionary (i18n) --- */
     const dict = {
       ar: {
-        brand1: "IronPeak", brand2: "Capital", username: "اسم المستخدم", password: "كلمة المرور", loginBtn: "تسجيل الدخول",
-        navInput: "إدخال", navAnalytics: "تحليلات", navMarket: "السوق", navHistory: "السجل", navAdmin: "تعريفات",
-        inputTitle: "إدخال الأرباح", inputDesc: "أدخل صافي أرباح الشركاء لهذا اليوم", date: "التاريخ", saveBtn: "اعتماد البيانات",
-        chartMonthly: "الأرباح الشهرية للشركاء", chartDaily: "تراكمي وصافي الربح اليومي", historyTitle: "السجل المالي", clearBtn: "مسح السجلات", exportBtn: "تصدير Excel",
-        adminTitle: "إدارة الشركاء", adminDesc: "إضافة شركاء جدد وصلاحيات الدخول", pUsername: "اسم المستخدم (للدخول)", pPassword: "كلمة المرور",
-        pNameAr: "الاسم (عربي)", pNameEn: "الاسم (انجليزي)", pColor: "لون الشريك", addPartnerBtn: "حفظ الشريك", currentPartners: "قائمة الشركاء",
-        netProfit: "إجمالي الأرباح", days: "أيام العمل", dayUnit: "يوم", profitShare: "أرباح", thDate: "التاريخ", thMonth: "الشهر", thNet: "صافي الربح",
-        errLogin: "بيانات الدخول غير صحيحة", succLogin: "مرحباً بك", succSave: "تم الحفظ بنجاح", succAdd: "تمت إضافة الشريك", confirmClear: "تأكيد مسح كافة السجلات؟",
-        emptyData: "لا توجد حركات مالية مسجلة حالياً", currency: "JD", noExport: "لا توجد بيانات للتصدير"
+        brand1: "IronPeak", brand2: "Capital", username: "اسم المستخدم", password: "كلمة المرور", loginBtn: "تسجيل دخول آمن",
+        navAnalytics: "لوحة القيادة", navInput: "إدخال/تعديل", navMarket: "الأسواق", navHistory: "السجل المالي", navAdmin: "تعريفات",
+        inputTitle: "إدخال أرباح جديدة", inputDesc: "أدخل صافي أرباح الشركاء لهذا اليوم بدقة", date: "تاريخ الحركة", saveBtn: "اعتماد وحفظ البيانات",
+        updateBtn: "تحديث البيانات", cancelEdit: "إلغاء التعديل", editModeTitle: "تعديل حركة مالية", editModeDesc: "أنت تقوم الآن بتعديل بيانات مسجلة مسبقاً",
+        liveTotal: "إجمالي الربح الصافي المتوقع", chartMonthly: "الأداء الشهري للشركاء", chartDaily: "نمو رأس المال وصافي الربح", 
+        historyTitle: "السجل المالي التفصيلي", clearBtn: "مسح الكل", exportBtn: "تصدير Excel",
+        filterFrom: "من تاريخ", filterTo: "إلى تاريخ", applyFilter: "تطبيق الفلتر", resetFilter: "إلغاء الفلتر",
+        adminTitle: "إدارة الشركاء والنظام", adminDesc: "إضافة شركاء جدد وصلاحيات الدخول", pUsername: "اسم المستخدم (للدخول)", pPassword: "كلمة المرور",
+        pNameAr: "الاسم (عربي)", pNameEn: "الاسم (انجليزي)", pColor: "اللون التعريفي (Chart Color)", addPartnerBtn: "حفظ وإضافة الشريك", currentPartners: "الشركاء الحاليين في النظام",
+        netProfit: "إجمالي الأرباح المتراكمة", days: "أيام التداول النشطة", dayUnit: "يوم", profitShare: "أرباح", thDate: "التاريخ", thMonth: "الشهر", thNet: "صافي الربح", thActions: "إجراءات",
+        errLogin: "بيانات الدخول غير صحيحة", succLogin: "تم تسجيل الدخول بنجاح", succSave: "تم حفظ الحركة المالية بنجاح", succUpdate: "تم التحديث بنجاح", succAdd: "تمت إضافة الشريك للنظام", 
+        succDel: "تم حذف الحركة المالية", confirmClear: "تحذير: هل أنت متأكد من مسح كافة السجلات؟ هذا الإجراء لا يمكن التراجع عنه.", confirmDel: "هل تريد بالتأكيد حذف هذه الحركة؟",
+        emptyData: "لا توجد حركات مالية مسجلة في هذا النطاق", currency: "JD", noExport: "لا توجد بيانات متاحة للتصدير",
+        greetingMorning: "صباح الخير،", greetingAfternoon: "طاب مساؤك،", greetingEvening: "مساء الخير،", greetingSub: "إليك ملخص الأداء المالي حتى اللحظة."
       },
       en: {
-        brand1: "IronPeak", brand2: "Capital", username: "Username", password: "Password", loginBtn: "Sign In",
-        navInput: "Input", navAnalytics: "Analytics", navMarket: "Market", navHistory: "History", navAdmin: "Settings",
-        inputTitle: "Profit Entry", inputDesc: "Enter daily net profit shares", date: "Date", saveBtn: "Submit Data",
-        chartMonthly: "Monthly Partner Profits", chartDaily: "Daily Net & Cumulative", historyTitle: "Financial History", clearBtn: "Clear Data", exportBtn: "Export Excel",
-        adminTitle: "Partner Management", adminDesc: "Add new partners to the system", pUsername: "Username", pPassword: "Password",
-        pNameAr: "Name (Arabic)", pNameEn: "Name (English)", pColor: "Chart Color", addPartnerBtn: "Add Partner", currentPartners: "Active Partners",
-        netProfit: "Net Profit", days: "Active Days", dayUnit: "Days", profitShare: "Profit", thDate: "Date", thMonth: "Month", thNet: "Net Profit",
-        errLogin: "Invalid credentials", succLogin: "Welcome back", succSave: "Data saved successfully", succAdd: "Partner added", confirmClear: "Are you sure you want to clear all data?",
-        emptyData: "No financial records found", currency: "JD", noExport: "No data to export"
+        brand1: "IronPeak", brand2: "Capital", username: "Username", password: "Password", loginBtn: "Secure Sign In",
+        navAnalytics: "Dashboard", navInput: "Entry/Edit", navMarket: "Markets", navHistory: "History", navAdmin: "Settings",
+        inputTitle: "New Profit Entry", inputDesc: "Enter daily net profit shares accurately", date: "Transaction Date", saveBtn: "Submit & Save",
+        updateBtn: "Update Data", cancelEdit: "Cancel Edit", editModeTitle: "Edit Transaction", editModeDesc: "You are currently editing an existing record",
+        liveTotal: "Expected Total Net Profit", chartMonthly: "Monthly Partner Performance", chartDaily: "Capital Growth & Daily Net", 
+        historyTitle: "Detailed Financial History", clearBtn: "Clear All", exportBtn: "Export Excel",
+        filterFrom: "From Date", filterTo: "To Date", applyFilter: "Apply Filter", resetFilter: "Reset",
+        adminTitle: "Partner & System Management", adminDesc: "Add new partners and set access roles", pUsername: "Login Username", pPassword: "Password",
+        pNameAr: "Name (Arabic)", pNameEn: "Name (English)", pColor: "Chart Color identifier", addPartnerBtn: "Save & Add Partner", currentPartners: "Active System Partners",
+        netProfit: "Total Cumulative Profit", days: "Active Trading Days", dayUnit: "Days", profitShare: "Profit", thDate: "Date", thMonth: "Month", thNet: "Net Profit", thActions: "Actions",
+        errLogin: "Invalid credentials. Try again.", succLogin: "Login successful", succSave: "Transaction saved successfully", succUpdate: "Updated successfully", succAdd: "Partner added to system", 
+        succDel: "Transaction deleted", confirmClear: "WARNING: Are you sure you want to clear ALL data? This cannot be undone.", confirmDel: "Are you sure you want to delete this record?",
+        emptyData: "No financial records found in this range", currency: "JD", noExport: "No data available to export",
+        greetingMorning: "Good Morning,", greetingAfternoon: "Good Afternoon,", greetingEvening: "Good Evening,", greetingSub: "Here is your financial performance summary."
       }
     };
 
     /* --- Initialization --- */
     window.addEventListener('load', () => {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      updateThemeIcon();
       applyLanguage(ironPeakLang);
+      
       if (currentUser) {
         showApp();
       } else {
         document.getElementById('loginScreen').style.display = 'flex';
-        document.getElementById('loginTitleText').innerText = ironPeakLang === 'ar' ? 'تسجيل الدخول' : 'Login to Dashboard';
       }
       document.getElementById('date').valueAsDate = new Date();
+      setupLivePreviewListeners();
+    });
+
+    /* --- Theme & UI Interactions --- */
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      localStorage.setItem('ironPeakTheme', currentTheme);
+      updateThemeIcon();
+      if(monthlyChartInstance) updateAnalytics(); // Re-render charts for grid colors
+    }
+
+    function updateThemeIcon() {
+      const btn = document.getElementById('themeBtn');
+      btn.innerHTML = currentTheme === 'dark' ? '<i class="fa-regular fa-sun"></i>' : '<i class="fa-regular fa-moon"></i>';
+    }
+
+    /* Ripple Effect for Buttons */
+    document.querySelectorAll('.nav-link, .btn-submit, .btn-action').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        let x = e.clientX - e.target.getBoundingClientRect().left;
+        let y = e.clientY - e.target.getBoundingClientRect().top;
+        let ripples = document.createElement('span');
+        ripples.style.left = x + 'px'; ripples.style.top = y + 'px';
+        ripples.classList.add('ripple');
+        this.appendChild(ripples);
+        setTimeout(() => ripples.remove(), 600);
+      });
     });
 
     /* --- i18n Logic --- */
@@ -525,7 +706,7 @@
       ironPeakLang = ironPeakLang === 'ar' ? 'en' : 'ar';
       localStorage.setItem('ironPeakLang', ironPeakLang);
       applyLanguage(ironPeakLang);
-      if(currentUser) renderDynamicUI(); 
+      if(currentUser) { renderDynamicUI(); setSmartGreeting(); updateTable(); }
     }
 
     function applyLanguage(lang) {
@@ -533,33 +714,58 @@
       document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (dict[lang][key]) {
-          if(el.tagName === 'INPUT' && el.hasAttribute('placeholder')) {
-             // Let css handle floating label
-          } else {
-            el.innerText = dict[lang][key];
-          }
-        }
+        if (dict[lang][key]) el.innerText = dict[lang][key];
       });
-      document.getElementById('loginTitleText').innerText = lang === 'ar' ? 'تسجيل الدخول' : 'Login to Dashboard';
+      document.getElementById('loginTitleText').innerText = lang === 'ar' ? 'تسجيل الدخول للنظام' : 'Secure System Login';
       
-      // Update dynamic parts if logged in
       if(currentUser) {
-        document.getElementById('currentUserDisplay').innerText = (lang === 'ar' ? 'مرحباً، ' : 'Welcome, ') + (lang === 'ar' ? currentUser.nameAr : currentUser.nameEn);
+        document.getElementById('currentUserDisplay').innerText = (lang === 'ar' ? currentUser.nameAr : currentUser.nameEn);
         if(monthlyChartInstance) updateAnalytics();
       }
     }
 
-    /* --- Toast --- */
+    function setSmartGreeting() {
+      const hour = new Date().getHours();
+      let greetKey = 'greetingMorning';
+      if (hour >= 12 && hour < 17) greetKey = 'greetingAfternoon';
+      else if (hour >= 17) greetKey = 'greetingEvening';
+      
+      const name = ironPeakLang === 'ar' ? currentUser.nameAr : currentUser.nameEn;
+      const html = `
+        <h1>${dict[ironPeakLang][greetKey]} <span style="color:var(--gold-premium)">${name}</span></h1>
+        <p>${dict[ironPeakLang].greetingSub}</p>
+      `;
+      document.getElementById('greetingArea').innerHTML = html;
+    }
+
+    /* --- Smart Toasts (with Progress) --- */
+    let toastCount = 0;
     function showToast(message, type = 'success') {
       const container = document.getElementById('toastContainer');
+      // Limit to 3 toasts max
+      if(container.children.length >= 3) container.removeChild(container.firstChild);
+
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
       const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
-      toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+      
+      toast.innerHTML = `
+        <div class="toast-content"><i class="fa-solid ${icon}"></i> <span>${message}</span></div>
+        <div class="toast-progress"><div class="toast-progress-bar" style="animation-duration: 3.5s;"></div></div>
+      `;
+      
       container.appendChild(toast);
-      setTimeout(() => toast.classList.add('show'), 10);
-      setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3000);
+      
+      // Animate in
+      requestAnimationFrame(() => {
+        toast.classList.add('show');
+      });
+
+      // Auto remove
+      setTimeout(() => { 
+        toast.classList.remove('show'); 
+        setTimeout(() => toast.remove(), 400); 
+      }, 3500);
     }
 
     /* --- Authentication --- */
@@ -578,7 +784,7 @@
       if (authenticatedUser) {
         currentUser = authenticatedUser;
         sessionStorage.setItem('ironPeakUser', JSON.stringify(currentUser));
-        showToast(dict[ironPeakLang].succLogin + ' ' + (ironPeakLang === 'ar' ? currentUser.nameAr : currentUser.nameEn));
+        showToast(dict[ironPeakLang].succLogin);
         showApp();
       } else {
         showToast(dict[ironPeakLang].errLogin, 'error');
@@ -595,14 +801,14 @@
       setTimeout(() => {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('appContainer').style.display = 'block';
-        document.getElementById('currentUserDisplay').innerText = (ironPeakLang === 'ar' ? 'مرحباً، ' : 'Welcome, ') + (ironPeakLang === 'ar' ? currentUser.nameAr : currentUser.nameEn);
+        document.getElementById('currentUserDisplay').innerText = (ironPeakLang === 'ar' ? currentUser.nameAr : currentUser.nameEn);
         
-        if (currentUser.role === 'admin') {
-          document.getElementById('navAdmin').style.display = 'flex';
-        }
+        if (currentUser.role === 'admin') document.getElementById('navAdmin').style.display = 'flex';
         
+        setSmartGreeting();
         renderDynamicUI();
-        switchTab('input');
+        filteredData = [...ironPeakData]; // Reset filter
+        switchTab('analytics'); // Smart Default Tab
       }, 400);
     }
 
@@ -610,14 +816,17 @@
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
+      
+      const targetTab = document.getElementById(tabId);
+      if(targetTab) targetTab.classList.add('active');
       
       const navId = 'nav' + tabId.charAt(0).toUpperCase() + tabId.slice(1);
       const navEl = document.getElementById(navId);
       if(navEl) navEl.classList.add('active');
 
       if (tabId === 'analytics') updateAnalytics();
-      if (tabId === 'transactions') updateTable();
+      if (tabId === 'transactions') { applyFilter(); } // Ensure table uses latest data/filter
+      if (tabId === 'market' && !document.getElementById('tv_script')) loadMarket(currentMarketSymbol, document.querySelector('.market-tab.active'));
     }
 
     /* --- Dynamic UI Rendering based on Partners --- */
@@ -634,12 +843,13 @@
         const name = ironPeakLang === 'ar' ? p.nameAr : p.nameEn;
         const html = `
           <div class="form-group">
-            <input type="number" id="profit_${p.id}" class="form-control" step="0.01" required placeholder=" ">
+            <input type="number" id="profit_${p.id}" class="form-control profit-input" step="0.01" required placeholder=" ">
             <label for="profit_${p.id}" class="form-label" style="color:${p.color}">${dict[ironPeakLang].profitShare} ${name}</label>
           </div>
         `;
         container.innerHTML += html;
       });
+      setupLivePreviewListeners();
     }
 
     function renderTableHeaders() {
@@ -650,13 +860,36 @@
         html += `<th>${name}</th><th>%</th>`;
       });
       html += `<th>${dict[ironPeakLang].thNet}</th>`;
+      if(currentUser.role === 'admin') html += `<th>${dict[ironPeakLang].thActions}</th>`;
       tr.innerHTML = html;
     }
 
-    /* --- Entry Logic --- */
+    /* --- Live Total Preview Logic --- */
+    function setupLivePreviewListeners() {
+      const inputs = document.querySelectorAll('.profit-input');
+      inputs.forEach(inp => {
+        inp.addEventListener('input', calculateLiveTotal);
+      });
+    }
+
+    function calculateLiveTotal() {
+      let sum = 0;
+      document.querySelectorAll('.profit-input').forEach(inp => {
+        sum += parseFloat(inp.value) || 0;
+      });
+      const display = document.getElementById('liveTotalAmount');
+      display.innerHTML = `${sum.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} <small style="font-size:1rem">${dict[ironPeakLang].currency}</small>`;
+      
+      // Visual feedback
+      const box = document.getElementById('livePreviewBox');
+      box.style.transform = 'scale(1.02)';
+      setTimeout(() => box.style.transform = 'scale(1)', 200);
+    }
+
+    /* --- Data Entry & Editing Logic --- */
     document.getElementById('entryForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const btn = this.querySelector('.btn-submit');
+      const btn = document.getElementById('saveDataBtn');
       const originalHtml = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       
@@ -665,9 +898,7 @@
         const dateObj = new Date(dateVal);
         const monthNamesEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const monthNamesAr = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        const mArr = ironPeakLang === 'ar' ? monthNamesAr : monthNamesEn;
-        const monthStr = mArr[dateObj.getMonth()] + " " + dateObj.getFullYear();
-
+        
         let totalNet = 0;
         const partnerProfits = {};
         
@@ -677,8 +908,10 @@
           totalNet += val;
         });
 
+        const editId = document.getElementById('editEntryId').value;
+        
         const entry = {
-          id: Date.now(),
+          id: editId ? parseInt(editId) : Date.now(),
           date: dateVal,
           monthAr: monthNamesAr[dateObj.getMonth()] + " " + dateObj.getFullYear(),
           monthEn: monthNamesEn[dateObj.getMonth()] + " " + dateObj.getFullYear(),
@@ -687,16 +920,131 @@
           timestamp: dateObj.getTime()
         };
 
-        ironPeakData.push(entry);
+        if (editId) {
+          // Update existing
+          const index = ironPeakData.findIndex(d => d.id == editId);
+          if(index !== -1) ironPeakData[index] = entry;
+          showToast(dict[ironPeakLang].succUpdate);
+          cancelEditing(); // reset UI
+        } else {
+          // Add new
+          ironPeakData.push(entry);
+          showToast(dict[ironPeakLang].succSave);
+        }
+
         ironPeakData.sort((a, b) => a.timestamp - b.timestamp);
         localStorage.setItem('ironPeakData', JSON.stringify(ironPeakData));
+        filteredData = [...ironPeakData]; // reset filter to show new data
         
-        showToast(dict[ironPeakLang].succSave);
         this.reset();
         document.getElementById('date').valueAsDate = new Date();
+        calculateLiveTotal();
         btn.innerHTML = originalHtml;
-      }, 400);
+        
+      }, 400); // Fake small delay for premium feel
     });
+
+    /* --- Edit & Delete Specific Entries --- */
+    function editEntry(id) {
+      const entry = ironPeakData.find(d => d.id === id);
+      if(!entry) return;
+
+      switchTab('input');
+      
+      document.getElementById('editEntryId').value = entry.id;
+      document.getElementById('date').value = entry.date;
+      
+      Object.keys(ironPeakPartners).forEach(pid => {
+        const input = document.getElementById(`profit_${pid}`);
+        if(input) input.value = entry.profits[pid] || 0;
+      });
+
+      calculateLiveTotal();
+      
+      // Update UI for Edit Mode
+      document.getElementById('formMainTitle').innerText = dict[ironPeakLang].editModeTitle;
+      document.getElementById('formSubTitle').innerText = dict[ironPeakLang].editModeDesc;
+      document.getElementById('formMainTitle').style.color = 'var(--warning)';
+      const btn = document.getElementById('saveDataBtn');
+      btn.innerHTML = `<i class="fa-solid fa-pen"></i> <span>${dict[ironPeakLang].updateBtn}</span>`;
+      btn.style.background = 'linear-gradient(135deg, var(--warning), #d97706)';
+      document.getElementById('cancelEditBtn').style.display = 'flex';
+    }
+
+    function cancelEditing() {
+      document.getElementById('entryForm').reset();
+      document.getElementById('editEntryId').value = "";
+      document.getElementById('date').valueAsDate = new Date();
+      calculateLiveTotal();
+      
+      // Reset UI
+      document.getElementById('formMainTitle').innerText = dict[ironPeakLang].inputTitle;
+      document.getElementById('formSubTitle').innerText = dict[ironPeakLang].inputDesc;
+      document.getElementById('formMainTitle').style.color = 'var(--text-main)';
+      const btn = document.getElementById('saveDataBtn');
+      btn.innerHTML = `<i class="fa-solid fa-check-double"></i> <span>${dict[ironPeakLang].saveBtn}</span>`;
+      btn.style.background = 'linear-gradient(135deg, var(--gold-premium), #b8860b)';
+      document.getElementById('cancelEditBtn').style.display = 'none';
+    }
+
+    function deleteEntry(id) {
+      if(confirm(dict[ironPeakLang].confirmDel)) {
+        ironPeakData = ironPeakData.filter(d => d.id !== id);
+        localStorage.setItem('ironPeakData', JSON.stringify(ironPeakData));
+        showToast(dict[ironPeakLang].succDel, 'success');
+        applyFilter(); // re-render table with current filter
+      }
+    }
+
+    /* --- Market TradingView Multi-Asset Logic --- */
+    function loadMarket(symbol, btnElement) {
+      currentMarketSymbol = symbol;
+      
+      // Update Tabs styling
+      if(btnElement) {
+        document.querySelectorAll('.market-tab').forEach(el => el.classList.remove('active'));
+        btnElement.classList.add('active');
+      }
+
+      const container = document.getElementById('tv_container');
+      container.innerHTML = ''; // clear previous widget
+
+      const themeCode = currentTheme === 'dark' ? 'dark' : 'light';
+      const bgColor = currentTheme === 'dark' ? '#060a0f' : '#f1f5f9';
+      const gridColor = currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+
+      const widgetConfig = {
+        "lineWidth": 2, "lineType": 0, "chartType": "area",
+        "fontColor": "#94A3B8", "gridLineColor": gridColor,
+        "volumeUpColor": "rgba(212, 175, 55, 0.4)", "volumeDownColor": "rgba(239, 68, 68, 0.4)",
+        "backgroundColor": bgColor,
+        "upColor": "#D4AF37", "downColor": "#ef4444",
+        "borderUpColor": "#D4AF37", "borderDownColor": "#ef4444",
+        "colorTheme": themeCode, "isTransparent": true,
+        "locale": ironPeakLang === 'ar' ? "ar_AE" : "en",
+        "symbols": [[symbol]],
+        "dateRanges": ["1d|1", "1m|30", "3m|60", "12m|1D", "all|1M"],
+        "autosize": true, "width": "100%", "height": "100%"
+      };
+
+      const script = document.createElement('script');
+      script.id = 'tv_script';
+      script.type = 'text/javascript';
+      script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
+      script.async = true;
+      script.innerHTML = JSON.stringify(widgetConfig);
+
+      const wrapper = document.createElement('div');
+      wrapper.className = "tradingview-widget-container";
+      wrapper.style.height = "100%"; wrapper.style.width = "100%";
+      const inner = document.createElement('div');
+      inner.className = "tradingview-widget-container__widget";
+      inner.style.height = "100%"; inner.style.width = "100%";
+      
+      wrapper.appendChild(inner);
+      wrapper.appendChild(script);
+      container.appendChild(wrapper);
+    }
 
     /* --- Analytics Logic --- */
     function updateAnalytics() {
@@ -728,10 +1076,10 @@
         dailyData[item.date] += item.netProfit;
       });
 
-      // Render Cards
+      // Render Dashboard Cards
       let cardsHtml = `
-        <div class="stat-card">
-          <i class="fa-solid fa-vault stat-icon" style="background: linear-gradient(135deg, var(--primary-teal), #fff); -webkit-background-clip: text;"></i>
+        <div class="stat-card premium-card">
+          <i class="fa-solid fa-vault stat-icon" style="background: linear-gradient(135deg, var(--primary-teal), var(--text-main)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
           <div class="stat-title">${dict[ironPeakLang].netProfit}</div>
           <div class="stat-value">${totalNet.toLocaleString()} <span class="stat-currency">${dict[ironPeakLang].currency}</span></div>
         </div>
@@ -740,17 +1088,16 @@
         const p = ironPeakPartners[k];
         const name = ironPeakLang === 'ar' ? p.nameAr : p.nameEn;
         cardsHtml += `
-          <div class="stat-card" onmouseover="this.style.setProperty('--card-hover', '${p.color}')">
-            <style>.stat-card:hover::before { background: var(--card-hover, var(--primary-teal)); }</style>
-            <i class="fa-solid fa-user-tie stat-icon" style="background: linear-gradient(135deg, ${p.color}, #fff); -webkit-background-clip: text;"></i>
+          <div class="stat-card premium-card">
+            <i class="fa-solid fa-user-tie stat-icon" style="background: linear-gradient(135deg, ${p.color}, var(--text-main)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
             <div class="stat-title">${dict[ironPeakLang].profitShare} ${name}</div>
-            <div class="stat-value" style="color:${p.color}">${partnerTotals[k].toLocaleString()}</div>
+            <div class="stat-value" style="color:${p.color}">${partnerTotals[k].toLocaleString()} <span class="stat-currency">${dict[ironPeakLang].currency}</span></div>
           </div>
         `;
       });
       cardsHtml += `
-        <div class="stat-card">
-          <i class="fa-regular fa-calendar-check stat-icon"></i>
+        <div class="stat-card premium-card">
+          <i class="fa-regular fa-calendar-check stat-icon" style="color: var(--text-muted)"></i>
           <div class="stat-title">${dict[ironPeakLang].days}</div>
           <div class="stat-value">${daysCount} <span class="stat-currency">${dict[ironPeakLang].dayUnit}</span></div>
         </div>
@@ -761,8 +1108,13 @@
     }
 
     function renderCharts(monthlyData, dailyData) {
-      Chart.defaults.color = '#94A3B8';
+      Chart.defaults.color = currentTheme === 'dark' ? '#94A3B8' : '#64748b';
       Chart.defaults.font.family = "'Tajawal', 'Almarai', sans-serif";
+      const gridColor = currentTheme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+      const tooltipBg = currentTheme === 'dark' ? 'rgba(13, 22, 33, 0.9)' : 'rgba(255, 255, 255, 0.95)';
+      const tooltipBorder = currentTheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+      const tooltipTitle = currentTheme === 'dark' ? '#D4AF37' : '#0f172a';
+      const tooltipText = currentTheme === 'dark' ? '#fff' : '#0f172a';
       
       const monthLabels = Object.keys(monthlyData).sort((a,b) => monthlyData[a].sort.localeCompare(monthlyData[b].sort));
       
@@ -772,7 +1124,7 @@
           label: ironPeakLang === 'ar' ? p.nameAr : p.nameEn,
           data: monthLabels.map(m => monthlyData[m][k]),
           backgroundColor: p.color,
-          borderRadius: 4, borderWidth: 0
+          borderRadius: 6, borderWidth: 0
         };
       });
 
@@ -784,10 +1136,13 @@
         options: { 
           responsive: true, maintainAspectRatio: false, 
           plugins: { 
-            legend: { position: 'top', labels: { color: '#F8FAFC', usePointStyle: true, boxWidth: 8 } },
-            tooltip: { backgroundColor: 'rgba(6, 10, 15, 0.9)', titleColor: '#D4AF37', bodyColor: '#fff', padding: 12, borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }
+            legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 10, padding: 20 } },
+            tooltip: { backgroundColor: tooltipBg, titleColor: tooltipTitle, bodyColor: tooltipText, padding: 15, borderColor: tooltipBorder, borderWidth: 1, cornerRadius: 8 }
           },
-          scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' } } }
+          scales: { 
+            x: { stacked: true, grid: { display: false } }, 
+            y: { stacked: true, border: {display: false}, grid: { color: gridColor } } 
+          }
         }
       });
 
@@ -803,7 +1158,7 @@
       if (dailyChartInstance) dailyChartInstance.destroy();
       
       let gradArea = ctx2.createLinearGradient(0, 0, 0, 400);
-      gradArea.addColorStop(0, 'rgba(212, 175, 55, 0.4)');
+      gradArea.addColorStop(0, 'rgba(212, 175, 55, 0.3)');
       gradArea.addColorStop(1, 'rgba(212, 175, 55, 0.0)');
 
       dailyChartInstance = new Chart(ctx2, {
@@ -811,50 +1166,89 @@
         data: {
           labels: dayLabels,
           datasets: [
-            { type: 'line', label: 'Cumulative', data: cumulativeValues, borderColor: '#D4AF37', backgroundColor: gradArea, fill: true, tension: 0.4, borderWidth: 3, pointRadius: 2, yAxisID: 'y1' },
+            { type: 'line', label: 'Cumulative', data: cumulativeValues, borderColor: '#D4AF37', backgroundColor: gradArea, fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0, hitRadius: 10, yAxisID: 'y1' },
             { type: 'bar', label: 'Daily Net', data: dayValues, backgroundColor: 'rgba(0, 166, 147, 0.8)', borderRadius: 4, yAxisID: 'y' }
           ]
         },
         options: {
           responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
-          plugins: { legend: { display:false }, tooltip: { backgroundColor: 'rgba(6, 10, 15, 0.9)', padding: 12 } },
+          plugins: { legend: { display:false }, tooltip: { backgroundColor: tooltipBg, titleColor: tooltipTitle, bodyColor: tooltipText, padding: 15, borderColor: tooltipBorder, borderWidth: 1, cornerRadius: 8 } },
           scales: {
             x: { grid: { display: false } },
-            y: { type: 'linear', display: true, position: ironPeakLang==='ar'?'left':'right', grid: { color: 'rgba(255,255,255,0.05)' } },
-            y1: { type: 'linear', display: true, position: ironPeakLang==='ar'?'right':'left', grid: { drawOnChartArea: false } }
+            y: { type: 'linear', display: true, position: ironPeakLang==='ar'?'left':'right', border: {display: false}, grid: { color: gridColor } },
+            y1: { type: 'linear', display: true, position: ironPeakLang==='ar'?'right':'left', border: {display: false}, grid: { drawOnChartArea: false } }
           }
         }
       });
     }
 
-    /* --- Table Logic --- */
+    /* --- Filtering & Table Logic --- */
+    function applyFilter() {
+      const fFrom = document.getElementById('filterFrom').value;
+      const fTo = document.getElementById('filterTo').value;
+      
+      filteredData = ironPeakData.filter(item => {
+        if (fFrom && item.date < fFrom) return false;
+        if (fTo && item.date > fTo) return false;
+        return true;
+      });
+      updateTable();
+    }
+
+    function resetFilter() {
+      document.getElementById('filterFrom').value = '';
+      document.getElementById('filterTo').value = '';
+      filteredData = [...ironPeakData];
+      updateTable();
+    }
+
     function updateTable() {
       const tbody = document.getElementById('tableBody');
       tbody.innerHTML = '';
       
-      if(ironPeakData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${Object.keys(ironPeakPartners).length * 2 + 3}" style="padding:40px; color:var(--text-muted); text-align:center;">${dict[ironPeakLang].emptyData}</td></tr>`;
+      if(filteredData.length === 0) {
+        const cols = Object.keys(ironPeakPartners).length * 2 + (currentUser.role === 'admin' ? 4 : 3);
+        tbody.innerHTML = `<tr><td colspan="${cols}" style="padding:40px; color:var(--text-muted); text-align:center;">${dict[ironPeakLang].emptyData}</td></tr>`;
         return;
       }
 
-      const sortedData = [...ironPeakData].reverse();
+      // Sort descending for history view
+      const sortedData = [...filteredData].sort((a, b) => b.timestamp - a.timestamp);
       const pKeys = Object.keys(ironPeakPartners);
+      const isAdmin = currentUser.role === 'admin';
 
       sortedData.forEach((item, index) => {
         const tr = document.createElement('tr');
-        tr.style.animation = `slideUp 0.4s ease forwards ${(index * 0.05)}s`;
+        tr.style.animation = `slideUp 0.4s ease forwards ${(index * 0.03)}s`;
         tr.style.opacity = '0';
         
-        let html = `<td>${item.date}</td><td style="color:var(--text-muted); font-size:0.9rem;">${ironPeakLang === 'ar' ? item.monthAr : item.monthEn}</td>`;
+        let html = `<td data-label="${dict[ironPeakLang].thDate}">${item.date}</td>
+                    <td data-label="${dict[ironPeakLang].thMonth}" style="color:var(--text-muted); font-size:0.9rem;">${ironPeakLang === 'ar' ? item.monthAr : item.monthEn}</td>`;
         
         pKeys.forEach(k => {
           const val = item.profits[k] || 0;
           const perc = item.netProfit > 0 ? ((val / item.netProfit) * 100).toFixed(1) : 0;
           const color = ironPeakPartners[k].color;
-          html += `<td>${val.toLocaleString()}</td><td><span class="badge" style="background:rgba(255,255,255,0.1); color:${color}; border:1px solid ${color}40">${perc}%</span></td>`;
+          const name = ironPeakLang === 'ar' ? ironPeakPartners[k].nameAr : ironPeakPartners[k].nameEn;
+          html += `
+            <td data-label="${name}">${val.toLocaleString()}</td>
+            <td data-label="%"><span class="badge" style="background:rgba(255,255,255,0.05); color:${color}; border:1px solid ${color}40">${perc}%</span></td>
+          `;
         });
         
-        html += `<td class="net-profit-cell">${item.netProfit.toLocaleString()}</td>`;
+        html += `<td data-label="${dict[ironPeakLang].thNet}" class="net-profit-cell">${item.netProfit.toLocaleString()}</td>`;
+        
+        if(isAdmin) {
+          html += `
+            <td data-label="${dict[ironPeakLang].thActions}">
+              <div class="row-actions">
+                <button class="btn-icon-small edit" onclick="editEntry(${item.id})" title="تعديل"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn-icon-small delete" onclick="deleteEntry(${item.id})" title="حذف"><i class="fa-solid fa-trash-can"></i></button>
+              </div>
+            </td>
+          `;
+        }
+        
         tr.innerHTML = html;
         tbody.appendChild(tr);
       });
@@ -865,7 +1259,7 @@
       e.preventDefault();
       const id = document.getElementById('p_username').value.trim().toLowerCase();
       if(id === 'admin' || ironPeakPartners[id]) {
-        showToast('اسم المستخدم موجود مسبقاً', 'error'); return;
+        showToast('اسم المستخدم محجوز أو موجود مسبقاً', 'error'); return;
       }
       
       ironPeakPartners[id] = {
@@ -881,6 +1275,7 @@
       showToast(dict[ironPeakLang].succAdd);
       this.reset();
       renderDynamicUI();
+      if (monthlyChartInstance) updateAnalytics(); // refresh charts to include new partner
     });
 
     function renderAdminPartners() {
@@ -890,12 +1285,14 @@
         list.innerHTML += `
           <div class="user-card">
             <div class="user-info">
-              <div class="color-dot" style="background-color: ${p.color}; box-shadow: 0 0 10px ${p.color}"></div>
+              <div class="color-dot" style="background-color: ${p.color};"></div>
               <div>
-                <div style="font-weight:bold; color:var(--text-main)">${ironPeakLang === 'ar' ? p.nameAr : p.nameEn} (@${p.id})</div>
-                <div style="font-size:0.8rem; color:var(--text-muted)">Pass: ${p.pass}</div>
+                <div style="font-weight:700; color:var(--text-main); font-size:1.1rem;">${ironPeakLang === 'ar' ? p.nameAr : p.nameEn} <span style="font-size:0.8rem; color:var(--text-muted); font-weight:normal;">(@${p.id})</span></div>
+                <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">Role: ${p.role.toUpperCase()}</div>
               </div>
             </div>
+            <div>
+               </div>
           </div>
         `;
       });
@@ -903,13 +1300,13 @@
 
     /* --- Export & Clear --- */
     function exportToExcel() {
-      if(ironPeakData.length === 0) { showToast(dict[ironPeakLang].noExport, "error"); return; }
+      if(filteredData.length === 0) { showToast(dict[ironPeakLang].noExport, "error"); return; }
       
-      const exportData = ironPeakData.map(item => {
+      const exportData = filteredData.map(item => {
         const row = {
           "Date / التاريخ": item.date,
           "Month / الشهر": item.monthEn,
-          "Net / الصافي": item.netProfit
+          "Net Profit / الصافي الكلي": item.netProfit
         };
         Object.keys(ironPeakPartners).forEach(k => {
           const name = ironPeakPartners[k].nameEn;
@@ -923,16 +1320,19 @@
 
       const worksheet = XLSX.utils.json_to_sheet(exportData);
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Financial_Report");
-      XLSX.writeFile(workbook, "IronPeak_Capital_Report.xlsx");
+      XLSX.utils.book_append_sheet(workbook, worksheet, "IronPeak_Report");
+      const dateStr = new Date().toISOString().slice(0,10);
+      XLSX.writeFile(workbook, `IronPeak_Capital_${dateStr}.xlsx`);
     }
 
     function clearData() {
       if(confirm(dict[ironPeakLang].confirmClear)) {
         localStorage.removeItem('ironPeakData');
         ironPeakData = [];
+        filteredData = [];
         updateTable();
-        showToast("Done / تم", "success");
+        updateAnalytics();
+        showToast("تم مسح السجلات بنجاح", "success");
       }
     }
   </script>
