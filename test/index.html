@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>GoldenPeak Capital - Premium FinTech</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  
+  <script type="module" src="firebase.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="background-pattern"></div>
+  <div class="toast-container" id="toastContainer"></div>
+
+  <div id="landingPage">
+    <header class="landing-header">
+      <div class="landing-logo">
+        <img src="https://raw.githubusercontent.com/BaselGhanem/IronPeak/refs/heads/main/GoldenPeakLogo.png" alt="GoldenPeak Logo" style="height: 40px; margin-inline-end: 10px;">
+        GoldenPeak Capital
+      </div>
+      <button class="btn-primary" onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> <span data-i18n="signIn">تسجيل الدخول</span></button>
+    </header>
+    <main class="landing-content">
+      <div class="hero-section">
+        <h1 data-i18n="heroTitle">منصتك المالية المتكاملة</h1>
+        <p data-i18n="heroDesc">انضم إلى GoldenPeak Capital واستفد من أحدث التحليلات والأسواق العالمية والمحتوى التعليمي الحصري.</p>
+        <button class="btn-primary" onclick="openLoginModal()" data-i18n="getStarted">ابدأ الآن</button>
+      </div>
+      <div class="video-container">
+        <iframe width="100%" height="400" src="https://www.youtube.com/embed/your-video-id" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="tips-grid" id="tipsGrid"></div>
+      <footer class="landing-footer" id="landingFooter"></footer>
+    </main>
+  </div>
+
+  <div class="modal" id="loginModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 data-i18n="loginTitle">تسجيل الدخول</h2>
+        <button class="modal-close" onclick="closeLoginModal()"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <input type="text" id="loginUsername" class="form-control" required placeholder=" ">
+          <label for="loginUsername" class="form-label" data-i18n="username">اسم المستخدم</label>
+        </div>
+        <div class="form-group">
+          <input type="password" id="loginPassword" class="form-control" required placeholder=" ">
+          <label for="loginPassword" class="form-label" data-i18n="password">كلمة المرور</label>
+        </div>
+        <button type="submit" class="btn-submit" data-i18n="loginBtn">دخول آمن</button>
+        <p style="margin-top: 15px; color: var(--text-muted); font-size: 0.9rem; text-align: center;"><i class="fa-solid fa-circle-info"></i> admin / admin2026</p>
+      </form>
+    </div>
+  </div>
+
+  <div id="appContainer">
+    <nav class="modern-nav">
+      <div class="nav-container">
+        <div class="nav-logo" onclick="switchTab('analytics')">
+          <img src="https://raw.githubusercontent.com/BaselGhanem/IronPeak/refs/heads/main/GoldenPeakLogo.png" alt="Logo" style="height: 40px; margin-inline-end: 10px;">
+          <span>GoldenPeak</span>&nbsp;<span class="brand-gold">Capital</span>
+        </div>
+        <div class="nav-actions">
+          <div class="user-profile-nav" id="userProfileNav"></div>
+          <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-regular fa-moon"></i></button>
+          <button class="icon-btn" onclick="toggleLanguage()"><i class="fa-solid fa-language"></i></button>
+          <button class="icon-btn" onclick="logout()"><i class="fa-solid fa-power-off" style="color: var(--danger)"></i></button>
+        </div>
+      </div>
+      <div class="nav-menu" id="navMenu"></div>
+    </nav>
+
+    <main class="main-content">
+      <section id="analytics" class="tab-content active">
+        <div class="smart-greeting" id="greetingArea"></div>
+        <div class="cards-grid" id="analyticsCardsGrid"></div>
+        <div class="charts-container">
+          <div class="premium-card chart-wrapper">
+            <div class="chart-title"><i class="fa-solid fa-chart-column"></i> <span data-i18n="chartMonthly">الأداء الشهري للشركاء</span></div>
+            <canvas id="monthlyChart"></canvas>
+          </div>
+          <div class="premium-card chart-wrapper">
+            <div class="chart-title"><i class="fa-solid fa-chart-area"></i> <span data-i18n="chartDaily">نمو الأرباح وصافي الربح اليومي</span></div>
+            <canvas id="dailyCumulativeChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="input" class="tab-content">
+        <div class="premium-card form-container">
+          <div class="form-header">
+            <h2 id="formMainTitle" data-i18n="inputTitle">إدخال أرباح جديدة</h2>
+            <p data-i18n="inputDesc">أدخل صافي أرباح اليوم ليتم توزيعها أو إدخالها للشركاء بدقة</p>
+          </div>
+          <form id="entryForm">
+            <input type="hidden" id="editEntryId" value="">
+            <div class="form-group">
+              <input type="date" id="date" class="form-control" required>
+              <label for="date" class="form-label" data-i18n="date">التاريخ</label>
+            </div>
+            <div class="form-group">
+              <label data-i18n="autoDistribute">توزيع تلقائي (إجمالي الربح)</label>
+              <div class="stepper-wrapper">
+                <input type="number" id="masterNetProfit" class="stepper-input" step="0.01" placeholder="0.00">
+              </div>
+              <small><i class="fa-solid fa-wand-magic-sparkles"></i> عند إدخال رقم هنا، سيتم توزيعه تلقائياً بناءً على نسب الشركاء الحالية.</small>
+            </div>
+            <div id="dynamicPartnerInputs"></div>
+            <div class="live-preview-box" id="livePreviewBox">
+              <span data-i18n="liveTotal">إجمالي الربح الصافي للعملية</span>
+              <h3 id="liveTotalAmount">0.00 <small data-i18n="currency">JD</small></h3>
+            </div>
+            <button type="submit" class="btn-submit" id="saveDataBtn"><i class="fa-solid fa-check-double"></i> <span data-i18n="saveBtn">اعتماد وحفظ البيانات</span></button>
+            <button type="button" class="btn-action btn-clear" id="cancelEditBtn" style="display:none; width:100%; margin-top:15px;" onclick="cancelEditing()"><i class="fa-solid fa-times"></i> <span data-i18n="cancelEdit">إلغاء التعديل</span></button>
+          </form>
+        </div>
+      </section>
+
+      <section id="market" class="tab-content">
+        <div class="premium-card" style="padding:20px">
+          <div class="market-tabs">
+            <button class="market-tab active" onclick="loadMarket('OANDA:XAUUSD', this)">الذهب (XAU/USD)</button>
+            <button class="market-tab" onclick="loadMarket('BINANCE:BTCUSDT', this)">Bitcoin (BTC)</button>
+            <button class="market-tab" onclick="loadMarket('OANDA:EURUSD', this)">EUR/USD</button>
+            <button class="market-tab" onclick="loadMarket('NASDAQ:AAPL', this)">Apple Inc.</button>
+          </div>
+          <div class="tradingview-widget-wrapper" id="tv_container"></div>
+        </div>
+      </section>
+
+      <section id="transactions" class="tab-content">
+        <div class="premium-card table-container">
+          <div class="header-actions">
+            <h2><i class="fa-solid fa-list-check"></i> <span data-i18n="historyTitle">السجل المالي التفصيلي</span></h2>
+            <div class="action-group">
+              <button class="btn-action btn-export" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> <span data-i18n="exportBtn">تصدير Excel</span></button>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label data-i18n="filterFrom">من تاريخ</label>
+              <input type="date" id="filterFrom">
+            </div>
+            <div class="filter-group">
+              <label data-i18n="filterTo">إلى تاريخ</label>
+              <input type="date" id="filterTo">
+            </div>
+            <button class="filter-btn" onclick="applyFilter()"><i class="fa-solid fa-filter"></i> <span data-i18n="applyFilter">تطبيق الفلتر</span></button>
+            <button class="filter-btn filter-btn-reset" onclick="resetFilter()"><i class="fa-solid fa-rotate-left"></i> <span data-i18n="resetFilter">إلغاء</span></button>
+          </div>
+          <table id="dataTable">
+            <thead><tr id="tableHeaderRow"></tr></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="telegram" class="tab-content">
+        <div class="premium-card telegram-container">
+          <i class="fa-brands fa-telegram telegram-icon"></i>
+          <h2 data-i18n="telegramTitle">انضم إلى قناتنا على تيليجرام</h2>
+          <p data-i18n="telegramDesc">احصل على آخر التحديثات والإشارات الفورية</p>
+          <a href="#" id="telegramLinkBtn" class="telegram-link" target="_blank"><i class="fa-brands fa-telegram"></i> <span data-i18n="joinTelegram">انضم الآن</span></a>
+        </div>
+      </section>
+
+      <section id="admin" class="tab-content">
+        <div class="admin-grid">
+          <div class="admin-section">
+            <div class="admin-section-title"><i class="fa-solid fa-users"></i> <span data-i18n="partnerManagement">إدارة الشركاء</span></div>
+            <button class="btn-submit" style="margin-bottom:20px; padding:12px;" onclick="openPartnerModal()"><i class="fa-solid fa-user-plus"></i> <span data-i18n="addPartner">إضافة شريك جديد</span></button>
+            <div class="partner-list" id="partnerList"></div>
+          </div>
+          <div class="admin-section">
+            <div class="admin-section-title"><i class="fa-solid fa-percent"></i> <span data-i18n="distributePercentages">توزيع نسب الشركاء</span></div>
+            <p><i class="fa-solid fa-circle-info"></i> يجب أن يكون مجموع النسب 100%</p>
+            <form id="percentagesForm">
+              <div id="adminPercentagesList" class="partner-list"></div>
+              <div style="margin-top:20px; display:flex; justify-content:space-between;">
+                <span data-i18n="totalSum">المجموع الكلي:</span>
+                <span id="percTotalDisplay" style="color:var(--danger);">0%</span>
+              </div>
+              <button type="submit" class="btn-submit" style="margin-top:20px;" disabled id="savePercBtn"><i class="fa-solid fa-save"></i> <span data-i18n="savePercBtn">اعتماد النسب</span></button>
+            </form>
+          </div>
+          <div class="admin-section">
+            <div class="admin-section-title"><i class="fa-solid fa-gear"></i> <span data-i18n="platformSettings">إعدادات المنصة</span></div>
+            <form id="settingsForm">
+              <div class="form-group">
+                <input type="text" id="telegramLink" class="form-control" placeholder=" ">
+                <label class="form-label" data-i18n="telegramLinkLabel">رابط التلجرام</label>
+              </div>
+              <div class="form-group">
+                <input type="email" id="platformEmail" class="form-control" placeholder=" ">
+                <label class="form-label" data-i18n="platformEmailLabel">البريد الإلكتروني</label>
+              </div>
+              <button type="submit" class="btn-submit"><i class="fa-solid fa-save"></i> حفظ</button>
+            </form>
+            <hr style="margin:30px 0; border-color:var(--glass-border);">
+            <h3><i class="fa-solid fa-video"></i> إدارة الفيديوهات</h3>
+            <form id="addVideoForm" style="display:grid; gap:15px;">
+              <input type="text" id="videoTitle" class="form-control" placeholder="عنوان الفيديو" required>
+              <input type="text" id="videoEmbedCode" class="form-control" placeholder="كود التضمين" required>
+              <button type="submit" class="btn-action" style="background:var(--primary-teal);"><i class="fa-solid fa-plus"></i> إضافة</button>
+            </form>
+            <div class="video-list" id="adminVideoList"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal" id="partnerModal">
+    <div class="modal-box" style="max-width:500px;">
+      <div class="modal-header">
+        <h2 id="partnerModalTitle">إضافة شريك</h2>
+        <button class="modal-close" onclick="closePartnerModal()"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <form id="partnerForm">
+        <input type="hidden" id="partnerId">
+        <div class="form-group">
+          <input type="text" id="partnerUsername" class="form-control" required placeholder=" ">
+          <label class="form-label">اسم المستخدم</label>
+        </div>
+        <div class="form-group">
+          <input type="password" id="partnerPassword" class="form-control" placeholder=" " required>
+          <label class="form-label">كلمة المرور</label>
+        </div>
+        <div class="form-group">
+          <input type="text" id="partnerNameAr" class="form-control" required placeholder=" ">
+          <label class="form-label">الاسم (عربي)</label>
+        </div>
+        <div class="form-group">
+          <input type="text" id="partnerNameEn" class="form-control" required placeholder=" ">
+          <label class="form-label">الاسم (إنجليزي)</label>
+        </div>
+        <div class="form-group">
+          <label>اللون التعريفي</label>
+          <input type="color" id="partnerColor" value="#00A693" style="width:100%; height:50px;">
+        </div>
+        <div class="form-group">
+          <label>الصورة الشخصية (تخزن محلياً)</label>
+          <input type="file" id="partnerImage" accept="image/*">
+        </div>
+        <button type="submit" class="btn-submit">حفظ</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
